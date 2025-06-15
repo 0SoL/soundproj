@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load static %}
+<h2>Загрузить трек</h2>
+
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+
+    <button type="submit">Загрузить</button>
+</form>
+
+<hr>
+<h3>Мои треки</h3>
+<ul>
+    {% for song in request.user.song_set.all %}
+        <li>{{ song.title }} — {{ song.artist }}</li>
+    {% empty %}
+        <li>Вы ещё ничего не загрузили</li>
+    {% endfor %}
+</ul>
+
+{% endblock %}

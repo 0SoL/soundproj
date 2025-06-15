@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Твои лайкнутые треки</h2>
+<ul>
+    {% for song in songs %}
+        <li>
+            {{ song.title }} — {{ song.artist }}
+            <button class="play-btn" data-src="{{ song.audio_file.url }}" data-title="{{ song.title }}">▶</button>
+            <button class="like-btn" data-id="{{ song.id }}">❤️</button>
+        </li>
+    {% empty %}
+        <li>Пока ничего не лайкнуто</li>
+    {% endfor %}
+</ul>
+{% endblock %}
