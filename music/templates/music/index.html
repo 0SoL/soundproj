@@ -1,19 +1,25 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block content %}
 <h2>All Songs</h2>
-<ul>
-    {% for song in songs %}
-        <li>
-            {{ song.title }} — {{ song.artist }}
-            <button class="play-btn" data-src="{{ song.audio_file.url }}" data-title="{{ song.title }}">▶</button>
-        </li>
-        <button class="like-btn" data-id="{{ song.id }}">
-            {% if user in song.liked_by.all %}
-                ❤️
+<div class='song-container'>
+{% for song in songs %}
+    <div class='song-wrapper'>  <!-- Добавили wrapper -->
+        <div class='song-card'>
+            {% if song.cover %}
+                <img src="{{ song.cover.url }}" alt="Обложка" class='song-cover'>
             {% else %}
-                🤍
+                <div class='song-cover' style="background: #ccc;"></div>
             {% endif %}
-        </button>
-    {% endfor %}
-</ul>
+
+            <button class="play-btn" data-src="{{ song.audio_file.url }}" data-title="{{ song.title }}" data-artist="{{ song.artist }}">▶</button>
+            <button class="like-btn" data-id="{{ song.id }}">❤️</button>
+        </div>
+
+        <p class='song-title'><i class="fa-solid fa-heart"></i>{{ song.title }}</p>
+        <p class='song-artist'>{{ song.artist }}</p>
+    </div>
+{% endfor %}
+</div>
+<link rel="stylesheet" href="{% static 'styles/liked.css' %}">
 {% endblock %}

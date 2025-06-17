@@ -1,15 +1,37 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block content %}
-<h2>Твои лайкнутые треки</h2>
-<ul>
-    {% for song in songs %}
-        <li>
-            {{ song.title }} — {{ song.artist }}
-            <button class="play-btn" data-src="{{ song.audio_file.url }}" data-title="{{ song.title }}">▶</button>
+<h2 class='liked-h2'>Hear the tracks you’ve liked:</h2>
+<div class='song-container'>
+{% for song in songs %}
+    <div class='song-wrapper'> 
+        <div class='song-card'>
+            {% if song.cover %}
+                <img src="{{ song.cover.url }}" alt="Обложка" class='song-cover'>
+            {% else %}
+                <img src="{% static 'images/placeholder.png' %}" alt="Обложка" class='song-cover'>
+            {% endif %}
+
+            <button class="play-btn"
+                    data-src="{{ song.audio_file.url }}" 
+                    data-title="{{ song.title }}" 
+                    data-artist="{{ song.artist }}"
+                    {% if song.cover %}
+                        data-cover="{{ song.cover.url }}"
+                    {% else %}
+                        data-cover="{% static 'images/placeholder.png' %}"
+                    {% endif %}
+                    >▶</button>
             <button class="like-btn" data-id="{{ song.id }}">❤️</button>
-        </li>
-    {% empty %}
-        <li>Пока ничего не лайкнуто</li>
-    {% endfor %}
-</ul>
+        </div>
+
+        <p class='song-title'><i class="fa-solid fa-heart"></i>{{ song.title }}</p>
+        <p class='song-artist'>{{ song.artist }}</p>
+    </div>
+
+{% empty %}
+    Пока ничего не лайкнуто
+{% endfor %}
+</div>
+<link rel="stylesheet" href="{% static 'styles/liked.css' %}">
 {% endblock %}

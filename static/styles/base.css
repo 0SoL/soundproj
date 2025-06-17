@@ -1,0 +1,251 @@
+/* ——— Цвета для светлой темы ——— */
+:root {
+  --bg-color: #ffffff;
+  --text-color: #222222;
+  --header-bg: #f5f5f5;
+  --link-color: #0066cc;
+  --footer-bg: #f1f1f1;
+}
+
+/* ——— Автопереключение по системным настройкам ——— */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg-color: #121212;
+    --text-color: #e0e0e0;
+    --header-bg: #1f1f1f;
+    --link-color: #3399ff;
+    --footer-bg: #1f1f1f;
+    --links-color: #999999;
+  }
+}
+
+/* ——— Ручное переключение ——— */
+[data-theme="light"] {
+  /* те же значения, что в :root */
+}
+[data-theme="dark"] {
+  /* те же значения, что в @media выше */
+}
+
+/* ——— Применяем переменные ——— */
+body {
+  background: var(--bg-color);
+  color: var(--text-color);
+  transition: background .3s, color .3s;
+  font-family: 'Inter', sans-serif;
+}
+
+.header-links {
+  padding: 8px 16px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.header-links a {
+  color: var(--links-color);
+  text-decoration: none;
+}
+.header-links a:hover {
+  color: var(--text-color);
+}
+footer {
+  background: var(--footer-bg);
+  color: var(--text-color);
+  padding: 8px 16px;
+}
+
+
+.parent {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: repeat(5, 1fr);
+    gap: 8px;
+}
+    
+.div1 {
+    grid-column: span 5 / span 5;
+    padding: 0px 16px;
+    margin: 0px 228px;
+    color: white;
+}
+
+.div2 {
+    grid-column: span 3 / span 3;
+    grid-row: span 4 / span 4;
+    grid-row-start: 2;
+    padding: 0px 16px;
+    margin: 0px 228px;
+}
+
+.div3 {
+    grid-column: span 2 / span 2;
+    grid-row: span 4 / span 4;
+    grid-column-start: 4;
+    grid-row-start: 2;
+}
+
+.div1, .div2, .div3 {
+    border: 1px solid black;
+    padding: 10px;
+}
+
+.logo {
+    width: 48px;
+}
+        
+.parent.no-div3 {
+    grid-template-columns: repeat(5, 1fr);
+}
+
+.parent.no-div3 .div3 {
+    display: none;
+}
+
+.parent.no-div3 .div2 {
+    grid-column: span 5 / span 5;
+}
+
+footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    padding: 0px 16px;
+    margin: 0px 228px;
+}
+
+#audio-player {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 12px;
+}
+
+/* #now-playing {
+  font-size: 12px;
+  position: fixed;
+  bottom: 20px;
+  right: 25px;
+  padding: 0px 16px;
+  margin: 0px 228px;
+} */
+
+.music-data {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  overflow: hidden; 
+}
+
+.music-artist {
+  color: #999;
+  font-size: 12px;
+  margin: 0;
+}
+
+.music-meta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-left: auto; /* ⚠️ толкает весь блок вправо */
+  max-width: 150px;       /* ограничиваем ширину */
+  overflow: hidden;
+
+}
+
+.music-title {
+  font-size: 12px;
+  font-weight: 600;
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.music-cover img {
+  width: 48px;
+  height: 48px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.music-title,
+.music-artist {
+  font-size: 12px;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+
+#progress {
+  -webkit-appearance: none;
+  width: 300px;
+  height: 3px;
+  background-color: rgba(18,18,18,.15);
+  cursor: pointer;
+  margin: 40px 0;
+}
+
+#progress::-webkit-slider-thumb {
+ -webkit-appearance: none;
+ background: #121212;
+ border: 1.5px solid #f50;
+ border-radius: 100%;
+ width: 10px;
+ height: 10px;
+}
+
+.icon {
+  color: white; /* сработает, если fill="currentColor" */
+}
+
+.play-button {
+    width: 50px;
+    height: 50px;
+    margin: 10px;
+    background: #fff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.player-controls svg {
+  width: 25px;
+  cursor: pointer;
+}
+
+.player-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  max-width: 500px; 
+}
+/* 
+.music-data {
+  display: flex;
+  align-items: center;
+  flex-direction: row-reverse; 
+  gap: 12px;
+}
+
+.music-artist {
+  color: #999;
+}
+
+.music-artist,
+.music-title {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.2;
+  text-align: right;
+}
+
+#now-playing-cover {
+  border-radius: 8px;
+  object-fit: cover;
+}
+*/

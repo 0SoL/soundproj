@@ -25,7 +25,6 @@ class SongListView(ListView):
     template_name = 'music/index.html'
     context_object_name = 'songs'
     
-    
 
 @require_POST
 @login_required
@@ -42,7 +41,8 @@ def toggle_like(request):
 
     return JsonResponse({'liked': liked})
 
+
 @login_required
 def liked_songs(request):
     songs = request.user.liked_songs.all()
-    return render(request, 'music/liked.html', {'songs': songs})
+    return render(request, 'music/liked.html', {'songs': songs, 'page_class': 'no-div3'})
