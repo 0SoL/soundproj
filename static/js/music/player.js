@@ -75,6 +75,9 @@ function getCookie(name) {
 let progress = document.getElementById('progress');
 let ctrlIcon = document.getElementById('ctrlIcon');
 let song = document.getElementById('player');
+const currentTime = document.getElementById('current-time');
+const duration = document.getElementById('duration');
+
 
 song.onloadedmetadata = function () {
     progress.max = song.duration;
@@ -93,17 +96,105 @@ function playPause () {
         ctrlIcon.classList.add('play');
         ctrlIcon.innerHTML = `<path d="M232.4,114.49,88.32,26.35a16,16,0,0,0-16.2-.3A15.86,15.86,0,0,0,64,39.87V216.13A15.94,15.94,0,0,0,80,232a16.07,16.07,0,0,0,8.36-2.35L232.4,141.51a15.81,15.81,0,0,0,0-27ZM80,215.94V40l143.83,88Z"/>`;
     }
-}
+};
 
-if (song.play()) {
+if (ctrlIcon.classList.contains('play')) {
     setInterval(() => {
         progress.value = song.currentTime;
     }, 500);
-}
+};
 
 progress.onchange = function() {
     song.play();
     song.currentTime = progress.value;
     ctrlIcon.classList.remove('pause');
     ctrlIcon.classList.add('play');
+};
+
+song.addEventListener('loadedmetadata', () => {
+  duration.textContent = formatTime(song.duration);
+//   seekBar.max = song.duration;
+});
+
+song.addEventListener('timeupdate', () => {
+  currentTime.textContent = formatTime(song.currentTime);
+//   seekBar.value = song.currentTime;
+});
+
+// song.addEventListener('input', () => {
+//   song.currentTime = seekBar.value;
+// });
+
+function formatTime(time) {
+  const minutes = Math.floor(time / 60);
+  const seconds = Math.floor(time % 60).toString().padStart(2, '0');
+  return `${minutes}:${seconds}`;
 }
+
+
+let volumeSlider = document.querySelector('.volume-slider');
+let volumeIcon = document.querySelector('.volume');
+
+
+function setVolume(){
+    song.volume = volumeSlider.value / 100;
+}
+
+volumeSlider.addEventListener('input', function () {
+    const value = parseInt(this.value); // 0–100
+    song.volume = value / 100; 
+
+    this.style.background = `linear-gradient(to right, #ffffff ${value}%, #2e2c2c ${value}%)`;
+
+    if (value > 50) {
+        volumeIcon.innerHTML = `<path d="M155.51,24.81a8,8,0,0,0-8.42.88L77.25,80H32A16,16,0,0,0,16,96v64a16,16,0,0,0,16,16H77.25l69.84,54.31A8,8,0,0,0,160,224V32A8,8,0,0,0,155.51,24.81ZM32,96H72v64H32ZM144,207.64,88,164.09V91.91l56-43.55Zm54-106.08a40,40,0,0,1,0,52.88,8,8,0,0,1-12-10.58,24,24,0,0,0,0-31.72,8,8,0,0,1,12-10.58ZM248,128a79.9,79.9,0,0,1-20.37,53.34,8,8,0,0,1-11.92-10.67,64,64,0,0,0,0-85.33,8,8,0,1,1,11.92-10.67A79.83,79.83,0,0,1,248,128Z">`
+    } 
+    if (value < 50) {
+        volumeIcon.innerHTML = `<path d="M155.51,24.81a8,8,0,0,0-8.42.88L77.25,80H32A16,16,0,0,0,16,96v64a16,16,0,0,0,16,16H77.25l69.84,54.31A8,8,0,0,0,160,224V32A8,8,0,0,0,155.51,24.81ZM32,96H72v64H32ZM144,207.64,88,164.09V91.91l56-43.55ZM208,128a39.93,39.93,0,0,1-10,26.46,8,8,0,0,1-12-10.58,24,24,0,0,0,0-31.72,8,8,0,1,1,12-10.58A40,40,0,0,1,208,128Z">`
+    } 
+    if (value == 0) {
+        volumeIcon.innerHTML = `<path d="M163.51,24.81a8,8,0,0,0-8.42.88L85.25,80H40A16,16,0,0,0,24,96v64a16,16,0,0,0,16,16H85.25l69.84,54.31A8,8,0,0,0,168,224V32A8,8,0,0,0,163.51,24.81ZM152,207.64,92.91,161.69A7.94,7.94,0,0,0,88,160H40V96H88a7.94,7.94,0,0,0,4.91-1.69L152,48.36Zm101.66-61.3a8,8,0,0,1-11.32,11.32L224,139.31l-18.34,18.35a8,8,0,0,1-11.32-11.32L212.69,128l-18.35-18.34a8,8,0,0,1,11.32-11.32L224,116.69l18.34-18.35a8,8,0,0,1,11.32,11.32L235.31,128Z">`
+    }
+})
+
+let lastVolume = 0;
+let isMuted = false;
+
+volumeIcon.addEventListener('click' , function () {
+    if (!isMuted) {
+        lastVolume = song.volume;
+        song.volume = 0
+        volumeSlider.value = 0;
+        volumeIcon.innerHTML = `<path d="M163.51,24.81a8,8,0,0,0-8.42.88L85.25,80H40A16,16,0,0,0,24,96v64a16,16,0,0,0,16,16H85.25l69.84,54.31A8,8,0,0,0,168,224V32A8,8,0,0,0,163.51,24.81ZM152,207.64,92.91,161.69A7.94,7.94,0,0,0,88,160H40V96H88a7.94,7.94,0,0,0,4.91-1.69L152,48.36Zm101.66-61.3a8,8,0,0,1-11.32,11.32L224,139.31l-18.34,18.35a8,8,0,0,1-11.32-11.32L212.69,128l-18.35-18.34a8,8,0,0,1,11.32-11.32L224,116.69l18.34-18.35a8,8,0,0,1,11.32,11.32L235.31,128Z">`
+        volumeSlider.style.background = `linear-gradient(to right, #ffffff 0%, #2e2c2c 0%)`;
+        isMuted = true;
+    } else {
+        song.volume = lastVolume;
+        const value = lastVolume * 100;
+        volumeSlider.value = value;
+        volumeSlider.style.background = `linear-gradient(to right, #ffffff ${value}%, #2e2c2c ${value}%)`;
+
+        if (value > 50) {
+            volumeIcon.innerHTML = `<path d="M155.51,24.81a8,8,0,0,0-8.42.88L77.25,80H32A16,16,0,0,0,16,96v64a16,16,0,0,0,16,16H77.25l69.84,54.31A8,8,0,0,0,160,224V32A8,8,0,0,0,155.51,24.81ZM32,96H72v64H32ZM144,207.64,88,164.09V91.91l56-43.55Zm54-106.08a40,40,0,0,1,0,52.88,8,8,0,0,1-12-10.58,24,24,0,0,0,0-31.72,8,8,0,0,1,12-10.58ZM248,128a79.9,79.9,0,0,1-20.37,53.34,8,8,0,0,1-11.92-10.67,64,64,0,0,0,0-85.33,8,8,0,1,1,11.92-10.67A79.83,79.83,0,0,1,248,128Z">`
+        } 
+        if (value < 50) {
+            volumeIcon.innerHTML = `<path d="M155.51,24.81a8,8,0,0,0-8.42.88L77.25,80H32A16,16,0,0,0,16,96v64a16,16,0,0,0,16,16H77.25l69.84,54.31A8,8,0,0,0,160,224V32A8,8,0,0,0,155.51,24.81ZM32,96H72v64H32ZM144,207.64,88,164.09V91.91l56-43.55ZM208,128a39.93,39.93,0,0,1-10,26.46,8,8,0,0,1-12-10.58,24,24,0,0,0,0-31.72,8,8,0,1,1,12-10.58A40,40,0,0,1,208,128Z">`
+        } 
+        if (value == 0) {
+            volumeIcon.innerHTML = `<path d="M163.51,24.81a8,8,0,0,0-8.42.88L85.25,80H40A16,16,0,0,0,24,96v64a16,16,0,0,0,16,16H85.25l69.84,54.31A8,8,0,0,0,168,224V32A8,8,0,0,0,163.51,24.81ZM152,207.64,92.91,161.69A7.94,7.94,0,0,0,88,160H40V96H88a7.94,7.94,0,0,0,4.91-1.69L152,48.36Zm101.66-61.3a8,8,0,0,1-11.32,11.32L224,139.31l-18.34,18.35a8,8,0,0,1-11.32-11.32L212.69,128l-18.35-18.34a8,8,0,0,1,11.32-11.32L224,116.69l18.34-18.35a8,8,0,0,1,11.32,11.32L235.31,128Z">`
+        }
+
+        isMuted = false;
+    }
+
+})
+
+const musicSlider = document.querySelector('.music-slider');
+
+song.addEventListener('timeupdate', function () {
+    const raw = (song.currentTime / song.duration) * 100;
+    const value = Math.floor(raw);
+    const pos = `${value}%`;
+    musicSlider.style.setProperty('--pos', pos);
+})
+

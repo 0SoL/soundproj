@@ -106,124 +106,181 @@ footer {
 }
 
 footer {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    z-index: 1000;
-    padding: 0px 16px;
-    margin: 0px 228px;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  padding: 8px 16px;
+  margin: 0px 228px;
+  background-color: #303030; /* Можно задать фон */
 }
 
 #audio-player {
   display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Основной контейнер с контролами и мета */
+.player-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  gap: 24px;
+}
+
+/* ==== КНОПКИ ==== */
+.player-controls {
+  display: flex;
   align-items: center;
   justify-content: flex-start;
-  gap: 12px;
+  gap: 20px; /* Единый отступ между ВСЕМИ элементами */
+  flex-wrap: nowrap;
+  flex-grow: 1;
 }
 
-/* #now-playing {
-  font-size: 12px;
-  position: fixed;
-  bottom: 20px;
-  right: 25px;
-  padding: 0px 16px;
-  margin: 0px 228px;
-} */
-
-.music-data {
-  display: flex;
-  flex-direction: column;
-  text-align: left;
-  overflow: hidden; 
+.icon {
+  width: 24px;
+  height: 32px;
+}
+/* Общая кнопка управления */
+.control-button svg {
+  width: 24px;
+  height: 32px;
+  color: white;
+  cursor: pointer;
 }
 
-.music-artist {
-  color: #999;
-  font-size: 12px;
-  margin: 0;
+/* Кнопка плей/пауза */
+.player-play-btn {
+  width: 32px;
+  height: 32px;
+  background: white;
+  border-radius: 50%;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
 }
 
-.music-meta {
+.player-play-btn svg {
+  width: 24px;
+  height: 32px;
+}
+
+/* ==== ПРОГРЕСС ==== */
+.progress-container {
   display: flex;
   align-items: center;
-  gap: 12px;
-  margin-left: auto; /* ⚠️ толкает весь блок вправо */
-  max-width: 150px;       /* ограничиваем ширину */
-  overflow: hidden;
-
+  gap: 6px;
 }
-
-.music-title {
-  font-size: 12px;
-  font-weight: 600;
-  margin: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.music-cover img {
-  width: 48px;
-  height: 48px;
-  object-fit: cover;
-  border-radius: 8px;
-}
-
-.music-title,
-.music-artist {
-  font-size: 12px;
-  margin: 0;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
 
 #progress {
   -webkit-appearance: none;
   width: 300px;
   height: 3px;
-  background-color: rgba(18,18,18,.15);
   cursor: pointer;
-  margin: 40px 0;
+}
+
+.music-slider {
+  --pos: 0%;
+  background: linear-gradient(to right, #f50 var(--pos), #12121226 var(--pos));
 }
 
 #progress::-webkit-slider-thumb {
- -webkit-appearance: none;
- background: #121212;
- border: 1.5px solid #f50;
- border-radius: 100%;
- width: 10px;
- height: 10px;
+  -webkit-appearance: none;
+  background: #121212;
+  border: 1.5px solid #f50;
+  border-radius: 50%;
+  width: 10px;
+  height: 10px;
 }
 
-.icon {
-  color: white; /* сработает, если fill="currentColor" */
+/* ==== ГРОМКОСТЬ ==== */
+.volume-container {
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 
-.play-button {
-    width: 50px;
-    height: 50px;
-    margin: 10px;
-    background: #fff;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-    cursor: pointer;
+.volume-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100px;
+  height: 3px;
+  background: linear-gradient(to right, #ffffff 100%, #2e2c2c 100%);
+  transition: opacity 0.2s;
 }
 
-.player-controls svg {
-  width: 25px;
+.volume-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 15px;
+  height: 15px;
+  background-color: #121212;
+  border: 1.5px solid #ffffff;
+  border-radius: 100%;
   cursor: pointer;
 }
 
-.player-controls {
+/* ==== МЕТАДАННЫЕ ТРЕКА ==== */
+.music-meta {
   display: flex;
   align-items: center;
-  gap: 10px;
-  max-width: 500px; 
+  gap: 12px;
+  max-width: 200px;
+  overflow: hidden;
+  margin-left: auto;
 }
+
+.music-cover img {
+  width: 32px;
+  height: 32px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.music-data {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  text-align: left;
+}
+
+.music-artist,
+.music-title {
+  font-size: 12px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin: 0;
+}
+
+.music-artist {
+  color: #999;
+  font-weight: 400;
+}
+
+.music-title {
+  font-weight: 600;
+  color: white;
+}
+
+.control-button,
+.player-play-btn,
+.progress-container,
+.volume-container {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.progress-container span {
+  font-size: 12px;
+}
+
 /* 
 .music-data {
   display: flex;
