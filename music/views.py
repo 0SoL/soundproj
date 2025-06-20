@@ -15,6 +15,7 @@ class UploadSongView(LoginRequiredMixin, CreateView):
     form_class = SongUploadForm
     template_name = 'music/upload.html'
     success_url = reverse_lazy('home')  # после загрузки — на главную
+    extra_context = {'page_class': 'no-div3'}
 
     def form_valid(self, form):
         form.instance.uploaded_by = self.request.user
@@ -45,4 +46,5 @@ def toggle_like(request):
 @login_required
 def liked_songs(request):
     songs = request.user.liked_songs.all()
+    print(songs)
     return render(request, 'music/liked.html', {'songs': songs, 'page_class': 'no-div3'})

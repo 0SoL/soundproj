@@ -1,27 +1,176 @@
-document.addEventListener('click', function (e) {
-    if (e.target.classList.contains('play-btn')) {
-        e.preventDefault();
-        const coverImg = document.getElementById('now-playing-cover');
-        const audio = document.getElementById('player');
-        const src = e.target.dataset.src;
-        audio.src = src;
-        audio.play();
-        console.log(e.target.dataset.artist)
+// document.addEventListener('click', function (e) {
+//     if (e.target.classList.contains('play-btn')) {
+//         e.preventDefault();
+//         // const coverImg = document.getElementById('now-playing-cover');
+//         // const audio = document.getElementById('player');
+//         // const tracks = document.querySelector('play-btn');
+        
+//         // // creating a playlist
 
-        ctrlIcon.innerHTML = '<path d="M200,32H160a16,16,0,0,0-16,16V208a16,16,0,0,0,16,16h40a16,16,0,0,0,16-16V48A16,16,0,0,0,200,32Zm0,176H160V48h40ZM96,32H56A16,16,0,0,0,40,48V208a16,16,0,0,0,16,16H96a16,16,0,0,0,16-16V48A16,16,0,0,0,96,32Zm0,176H56V48H96Z">'
-        ctrlIcon.classList.remove('play');
-        ctrlIcon.classList.add('pause');
-        // обращаюсь к html 
-        document.getElementById('now-playing').textContent = e.target.dataset.title;
-        document.getElementById('now-playing-artist').textContent = e.target.dataset.artist;
-        coverImg.src = e.target.dataset.cover;
-        if (e.target.dataset.cover) {
-            coverImg.src = e.target.dataset.cover;
-        } else {
-            coverImg.src = '/static/images/placeholder.png';
-        }
+
+//         // const src = e.target.dataset.src;
+//         // audio.src = src;
+        
+//         // audio.play();
+//         // console.log(e.target.dataset.artist)
+
+//         // ctrlIcon.innerHTML = '<path d="M200,32H160a16,16,0,0,0-16,16V208a16,16,0,0,0,16,16h40a16,16,0,0,0,16-16V48A16,16,0,0,0,200,32Zm0,176H160V48h40ZM96,32H56A16,16,0,0,0,40,48V208a16,16,0,0,0,16,16H96a16,16,0,0,0,16-16V48A16,16,0,0,0,96,32Zm0,176H56V48H96Z">'
+//         // ctrlIcon.classList.remove('play');
+//         // ctrlIcon.classList.add('pause');
+//         // // обращаюсь к html 
+//         // document.getElementById('now-playing').textContent = e.target.dataset.title;
+//         // document.getElementById('now-playing-artist').textContent = e.target.dataset.artist;
+//         // coverImg.src = e.target.dataset.cover;
+//         // if (e.target.dataset.cover) {
+//         //     coverImg.src = e.target.dataset.cover;
+//         // } else {
+//         //     coverImg.src = '/static/images/placeholder.png';
+//         // }
+//         const audio = document.getElementById('player');
+//         const playButtons = document.querySelectorAll(".play-btn");
+//         const coverImg = document.getElementById('now-playing-cover');
+
+//         const playlist = Array.from(playButtons).map(btn => ({
+//             url: btn.dataset.src,
+//             title: btn.dataset.title,
+//             artist: btn.dataset.artist,
+//             cover: btn.dataset.cover
+//         }));
+
+//         let currentIndex = 0;
+
+//         function playTrack(index) {
+//             currentIndex = index;
+//             const track = playlist[index];
+//             audio.src = track.url;
+//             audio.play()
+
+//             ctrlIcon.innerHTML = '<path d="M200,32H160a16,16,0,0,0-16,16V208a16,16,0,0,0,16,16h40a16,16,0,0,0,16-16V48A16,16,0,0,0,200,32Zm0,176H160V48h40ZM96,32H56A16,16,0,0,0,40,48V208a16,16,0,0,0,16,16H96a16,16,0,0,0,16-16V48A16,16,0,0,0,96,32Zm0,176H56V48H96Z">'
+//             ctrlIcon.classList.remove('play');
+//             ctrlIcon.classList.add('pause');
+
+//             // обращаюсь к html 
+//             document.getElementById('now-playing').textContent = e.target.dataset.title;
+//             document.getElementById('now-playing-artist').textContent = e.target.dataset.artist;
+//             coverImg.src = e.target.dataset.cover;
+//             if (e.target.dataset.cover) {
+//                 coverImg.src = e.target.dataset.cover;
+//             } else {
+//                 coverImg.src = '/static/images/placeholder.png';
+//             }
+//         }
+
+//         playButtons.forEach((btn, index) => {
+//         btn.addEventListener("click", () => {
+//             playTrack(index);
+//         });
+//         });
+
+//         audio.addEventListener("ended", () => {
+//         if (currentIndex < playlist.length - 1) {
+//             playTrack(currentIndex + 1);
+
+//             ctrlIcon.innerHTML = '<path d="M200,32H160a16,16,0,0,0-16,16V208a16,16,0,0,0,16,16h40a16,16,0,0,0,16-16V48A16,16,0,0,0,200,32Zm0,176H160V48h40ZM96,32H56A16,16,0,0,0,40,48V208a16,16,0,0,0,16,16H96a16,16,0,0,0,16-16V48A16,16,0,0,0,96,32Zm0,176H56V48H96Z">'
+//             ctrlIcon.classList.remove('play');
+//             ctrlIcon.classList.add('pause');
+
+//             // обращаюсь к html 
+//             document.getElementById('now-playing').textContent = e.target.dataset.title;
+//             document.getElementById('now-playing-artist').textContent = e.target.dataset.artist;
+//             coverImg.src = e.target.dataset.cover;
+//             if (e.target.dataset.cover) {
+//                 coverImg.src = e.target.dataset.cover;
+//             } else {
+//                 coverImg.src = '/static/images/placeholder.png';
+//             }
+//         } else {
+//             console.log("Конец плейлиста");
+//         }
+//         });
+//     }
+// });
+
+document.addEventListener('DOMContentLoaded', () => {
+  const audio = document.getElementById('player');
+  const ctrlIcon = document.getElementById('ctrlIcon');      
+  const coverImg = document.getElementById('now-playing-cover');
+  const titleEl  = document.getElementById('now-playing');
+  const artistEl = document.getElementById('now-playing-artist');
+
+  // Собираем плейлист один раз
+  const playButtons = Array.from(document.querySelectorAll('.play-btn'));
+  console.log(playButtons)
+  const playlist = playButtons.map(btn => ({
+    url:    btn.dataset.src,
+    title:  btn.dataset.title,
+    artist: btn.dataset.artist,
+    cover:  btn.dataset.cover || '/static/images/placeholder.png'
+  }));
+  console.log(playlist)
+
+  let currentIndex = 0;
+
+  // Обновляем UI в одном месте
+  function updateUI(track) {
+    titleEl.textContent  = track.title;
+    artistEl.textContent = track.artist;
+    coverImg.src         = track.cover;
+    ctrlIcon.innerHTML   = '<path d="M200,32H160a16,16,0,0,0-16,16V208a16,16,0,0,0,16,16h40a16,16,0,0,0,16-16V48A16,16,0,0,0,200,32Zm0,176H160V48h40ZM96,32H56A16,16,0,0,0,40,48V208a16,16,0,0,0,16,16H96a16,16,0,0,0,16-16V48A16,16,0,0,0,96,32Zm0,176H56V48H96Z">';
+    ctrlIcon.classList.remove('play');
+    ctrlIcon.classList.add('pause');
+  }
+
+  // Функция воспроизведения трека по индексу
+  function playTrack(index) {
+    currentIndex = index;
+    const track = playlist[index];
+    audio.src = track.url;
+    updateUI(track);
+    audio.play();
+  }
+
+  // Навешиваем клики на все кнопки один раз
+  playButtons.forEach((btn, index) => {
+    btn.addEventListener('click', () => playTrack(index));
+  });
+
+  // Автопереход к следующему треку
+  audio.addEventListener('ended', () => {
+    if (currentIndex < playlist.length - 1) {
+      playTrack(currentIndex + 1);
+    } else {
+      console.log('Плейлист завершён');
+      // при желании можно вернуть иконку в "play"
+      ctrlIcon.classList.remove('pause');
+      ctrlIcon.classList.add('play');
+      ctrlIcon.innerHTML = `<path d="M232.4,114.49,88.32,26.35a16,16,0,0,0-16.2-.3A15.86,15.86,0,0,0,64,39.87V216.13A15.94,15.94,0,0,0,80,232a16.07,16.07,0,0,0,8.36-2.35L232.4,141.51a15.81,15.81,0,0,0,0-27ZM80,215.94V40l143.83,88Z"/>`;
     }
+  });
+
+  // функция для пред. трека
+  const btnPrevTrack = document.getElementById("prev-track");
+  btnPrevTrack.addEventListener("click", function () {
+    if (currentIndex === 0) {
+        playTrack(currentIndex)
+    } else if (audio.currentTime > 5) {
+        playTrack(currentIndex);
+    } else {
+        playTrack(currentIndex - 1);
+    }
+  });
+
+  const btnNextTrack = document.getElementById("next-track");
+  btnNextTrack.addEventListener("click", function () {
+    if (currentIndex+1 >= playlist.length) {
+        console.log("Дальше нет треков")
+        console.log(currentIndex)
+        console.log(playlist.length)
+    } else {
+        playTrack(currentIndex + 1);
+    }
+  })
 });
+
 
 function loadPage(event, url) {
     console.log("loadPage triggered:", url);
@@ -31,11 +180,19 @@ function loadPage(event, url) {
         .then(html => {
             const parser = new DOMParser();
             const doc = parser.parseFromString(html, 'text/html');
+
             const content = doc.getElementById('main-content');
             document.getElementById('main-content').innerHTML = content.innerHTML;
+
+            document.body.className = doc.body.className;
+            const newParentClasses = doc.querySelector('.parent').className;
+            document.querySelector('.parent').className = newParentClasses;
+
             window.history.pushState({}, '', url);
         });
 }
+
+window.addEventListener('popstate', () => loadPage(null, location.pathname));
 
 document.addEventListener('click', function (e) {
     if (e.target.classList.contains('like-btn')) {
@@ -113,17 +270,12 @@ progress.onchange = function() {
 
 song.addEventListener('loadedmetadata', () => {
   duration.textContent = formatTime(song.duration);
-//   seekBar.max = song.duration;
 });
 
 song.addEventListener('timeupdate', () => {
   currentTime.textContent = formatTime(song.currentTime);
-//   seekBar.value = song.currentTime;
 });
 
-// song.addEventListener('input', () => {
-//   song.currentTime = seekBar.value;
-// });
 
 function formatTime(time) {
   const minutes = Math.floor(time / 60);

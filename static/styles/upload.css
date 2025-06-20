@@ -1,0 +1,143 @@
+.upload-wrapper {
+    padding: 10px;
+}
+
+.header-text {
+    font-size: 29px;
+    font-weight: 700;
+    margin-bottom: 20px;
+}
+
+.info-text {
+    font-size: 14px;
+    font-weight: 100;
+}
+
+.load-file-container {
+    height: 300px;
+    min-height: 320px;
+    width: 100%;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    gap: 5px;
+    text-align: center;
+}
+
+.header {
+  flex: 1;
+  width: 100%;
+  border: 2px dashed rgb(255 255 255 / 15%);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  transition: border-color .3s ease-in-out;
+}
+
+.header:hover {
+  border-color: rgb(255, 255, 255); /* Сделаем белую рамку более яркой */
+}
+
+.header svg {
+    color: white;
+}
+
+.header p {
+    font-size: 14px;
+    color: white;
+}
+
+input[type="file"] {
+  display: none;
+}
+
+.custom-upload-btn {
+    font-size: 14px;
+    margin-top: 10px;
+    padding: 10px 20px;
+    background-color: #ffffff;
+    color: black;
+    font-weight: bold;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.custom-upload-btn:hover {
+  background-color: #828282;
+}
+
+.upload-modal {
+  position: fixed;
+  inset: 0;
+  background-color: rgb(18, 18, 18); /* затемнение */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.modal-content {
+  background-color: #121212;
+  padding: 32px;
+  border-radius: 12px;
+  max-width: 900px;
+  width: 90%;
+  color: white;
+}
+
+.modal-track-info {
+  display: flex;
+  gap: 32px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.modal-header {
+    padding: 10px 32px;
+}
+.modal-header p {
+    font-size: 16px;
+    font-weight: 700;
+    color: white;
+}
+
+.load-cover-container {
+  width: 100%;
+  max-width: 300px;
+  min-width: 240px;
+}
+
+.cover-header {
+  height: 240px;
+  border: 2px dashed rgba(255, 255, 255, 0.15);
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  transition: border-color 0.3s ease-in-out;
+  padding: 16px;
+}
+
+.cover-header:hover {
+  border-color: rgb(255, 255, 255);
+}
+
+.cover-header p {
+    color: white;
+    font-weight: 600;
+}
+
+.track-info-container {
+  flex: 1;
+  min-width: 200px;
+}
+/* .upload-modal.hidden {
+  display: none;
+} */
