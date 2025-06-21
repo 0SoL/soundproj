@@ -90,139 +90,119 @@
 //     }
 // });
 
-document.addEventListener('DOMContentLoaded', () => {
-  const audio = document.getElementById('player');
-  const ctrlIcon = document.getElementById('ctrlIcon');      
-  const coverImg = document.getElementById('now-playing-cover');
-  const titleEl  = document.getElementById('now-playing');
-  const artistEl = document.getElementById('now-playing-artist')
-  const queueList = document.querySelector('.queue-list')
+  function initMusic() {
+    const audio       = document.getElementById('player');
+    const ctrlIcon    = document.getElementById('ctrlIcon');
+    const coverImg    = document.getElementById('now-playing-cover');
+    const titleEl     = document.getElementById('now-playing');
+    const artistEl    = document.getElementById('now-playing-artist');
+    const queueListEl = document.querySelector('.queue-list');
+    const playButtons = Array.from(document.querySelectorAll('.play-btn'));
 
-  // собираем плейлист один раз
-  const playButtons = Array.from(document.querySelectorAll('.play-btn'));
-  console.log(playButtons)
-  const playlist = playButtons.map(btn => ({
-    url:    btn.dataset.src,
-    title:  btn.dataset.title,
-    artist: btn.dataset.artist,
-    cover:  btn.dataset.cover || '/static/images/placeholder.png'
-  }));
+    // Если на этой странице нет плеера — выходим
+    if (!audio || playButtons.length === 0) return;
 
-  console.log(playlist)
+    // Собираем плейлист
+    const playlist = playButtons.map(btn => ({
+      url:    btn.dataset.src,
+      title:  btn.dataset.title,
+      artist: btn.dataset.artist,
+      cover:  btn.dataset.cover || '/static/images/placeholder.png'
+    }));
 
-  let currentIndex = 0;
+    let currentIndex = 0;
 
-  // обновляем UI в одном месте
-  function updateUI(track) {
-    titleEl.textContent  = track.title;
-    artistEl.textContent = track.artist;
-    coverImg.src         = track.cover;
-    ctrlIcon.innerHTML   = '<path d="M200,32H160a16,16,0,0,0-16,16V208a16,16,0,0,0,16,16h40a16,16,0,0,0,16-16V48A16,16,0,0,0,200,32Zm0,176H160V48h40ZM96,32H56A16,16,0,0,0,40,48V208a16,16,0,0,0,16,16H96a16,16,0,0,0,16-16V48A16,16,0,0,0,96,32Zm0,176H56V48H96Z">';
-    ctrlIcon.classList.remove('play');
-    ctrlIcon.classList.add('pause');
-  }
+    function updateUI(track) {
+      titleEl.textContent    = track.title;
+      artistEl.textContent   = track.artist;
+      coverImg.src           = track.cover;
+      // ставим иконку паузы
+      ctrlIcon.innerHTML     = '<path d="M200,32H160a16,16,0,0,0-16,16V208a16,16,0,0,0,16,16h40a16,16,0,0,0,16-16V48A16,16,0,0,0,200,32Zm0,176H160V48h40ZM96,32H56A16,16,0,0,0,40,48V208a16,16,0,0,0,16,16H96a16,16,0,0,0,16-16V48A16,16,0,0,0,96,32Zm0,176H56V48H96Z">';
+      ctrlIcon.classList.remove('play');
+      ctrlIcon.classList.add('pause');
+    }
 
-    function updateQueueUI(playlist, currentIndex) {
-    const queueList = document.querySelector('.queue-list');
-    queueList.innerHTML = '';
-
-    const nextTracks = playlist.slice(currentIndex + 1);
-
-    nextTracks.forEach((track, index) => {
+    function updateQueueUI(pl, idx) {
+      queueListEl.innerHTML = '';
+      pl.slice(idx + 1).forEach((track, i) => {
         const el = document.createElement('div');
-        el.classList.add('queue-track');
-
+        el.className = 'queue-track';
         el.innerHTML = `
-        <img src="${track.cover}" alt="cover" class="queue-cover">
-        <div class="queue-info">
+          <img src="${track.cover}" class="queue-cover" />
+          <div class="queue-info">
             <p class="queue-artist">${track.artist}</p>
             <p class="queue-title">${track.title}</p>
-        </div>
-        `;
-
-        el.addEventListener('click', () => {
-        playTrack(currentIndex + 1 + index);
-        });
-
-        queueList.appendChild(el);
-    });
+          </div>`;
+        el.addEventListener('click', () => playTrack(idx + 1 + i));
+        queueListEl.appendChild(el);
+      });
     }
 
+    function playTrack(i) {
+      currentIndex = i;
+      const track = playlist[i];
+      audio.src    = track.url;
+      updateUI(track);
+      audio.play();
+      updateQueueUI(playlist, i);
+    }
 
-  // функция воспроизведения трека по индексу
-  function playTrack(index) {
-    currentIndex = index;
-    const track = playlist[index];
-    audio.src = track.url;
-    updateUI(track);
-    audio.play();
-    updateQueueUI(playlist, index);
+    // навешиваем кнопки
+    playButtons.forEach((btn, i) =>
+      btn.addEventListener('click', () => playTrack(i))
+    );
+
+    // автопереход
+    audio.addEventListener('ended', () => {
+      if (currentIndex < playlist.length - 1) {
+        playTrack(currentIndex + 1);
+      } else {
+        // плейлист кончился — иконка «play»
+        ctrlIcon.classList.remove('pause');
+        ctrlIcon.classList.add('play');
+        ctrlIcon.innerHTML = `<path d="M232.4,114.49,88.32,26.35a16,16,0,0,0-16.2-.3A15.86,15.86,0,0,0,64,39.87V216.13A15.94,15.94,0,0,0,80,232a16.07,16.07,0,0,0,8.36-2.35L232.4,141.51a15.81,15.81,0,0,0,0-27ZM80,215.94V40l143.83,88Z"/>`;
+      }
+    });
+
+    // prev / next — опционально, если у вас есть такие кнопки
+    document.getElementById('prev-track')?.addEventListener('click', () => {
+      if (currentIndex === 0 || audio.currentTime > 5) {
+        playTrack(currentIndex);
+      } else {
+        playTrack(currentIndex - 1);
+      }
+    });
+    document.getElementById('next-track')?.addEventListener('click', () => {
+      if (currentIndex < playlist.length - 1) {
+        playTrack(currentIndex + 1);
+      }
+    });
   }
 
+  // 2. Инициализируем при первой загрузке
+  document.addEventListener('DOMContentLoaded', initMusic);
 
-  // навешиваем клики на все кнопки один раз
-  playButtons.forEach((btn, index) => {
-    btn.addEventListener('click', () => playTrack(index));
-  });
-
-  // автопереход к след треку
-  audio.addEventListener('ended', () => {
-    if (currentIndex < playlist.length - 1) {
-      playTrack(currentIndex + 1);
-    } else {
-      console.log('Плейлист завершён');
-      ctrlIcon.classList.remove('pause');
-      ctrlIcon.classList.add('play');
-      ctrlIcon.innerHTML = `<path d="M232.4,114.49,88.32,26.35a16,16,0,0,0-16.2-.3A15.86,15.86,0,0,0,64,39.87V216.13A15.94,15.94,0,0,0,80,232a16.07,16.07,0,0,0,8.36-2.35L232.4,141.51a15.81,15.81,0,0,0,0-27ZM80,215.94V40l143.83,88Z"/>`;
-    }
-  });
-
-  // функция для пред. трека
-  const btnPrevTrack = document.getElementById("prev-track");
-  btnPrevTrack.addEventListener("click", function () {
-    if (currentIndex === 0) {
-        playTrack(currentIndex)
-    } else if (audio.currentTime > 5) {
-        playTrack(currentIndex);
-    } else {
-        playTrack(currentIndex - 1);
-    }
-  });
-
-  const btnNextTrack = document.getElementById("next-track");
-  btnNextTrack.addEventListener("click", function () {
-    if (currentIndex+1 >= playlist.length) {
-        console.log("Дальше нет треков")
-        console.log(currentIndex)
-        console.log(playlist.length)
-    } else {
-        playTrack(currentIndex + 1);
-    }
-  })
-});
-
-
-function loadPage(event, url) {
-    console.log("loadPage triggered:", url);
-    event.preventDefault();
+  // 3. AJAX-переход
+  function loadPage(event, url) {
+    event?.preventDefault();
     fetch(url)
-        .then(res => res.text())
-        .then(html => {
-            const parser = new DOMParser();
-            const doc = parser.parseFromString(html, 'text/html');
+      .then(res => res.text())
+      .then(html => {
+        const doc     = new DOMParser().parseFromString(html, 'text/html');
+        const content = doc.getElementById('main-content');
 
-            const content = doc.getElementById('main-content');
-            document.getElementById('main-content').innerHTML = content.innerHTML;
+        document.getElementById('main-content').innerHTML = content.innerHTML;
+        document.body.className                          = doc.body.className;
+        document.querySelector('.parent').className      = doc.querySelector('.parent').className;
+        window.history.pushState({}, '', url);
 
-            document.body.className = doc.body.className;
-            const newParentClasses = doc.querySelector('.parent').className;
-            document.querySelector('.parent').className = newParentClasses;
+        initMusic();  // <— обязательно заново привязываем плеер
+      });
+  }
 
-            window.history.pushState({}, '', url);
-        });
-}
-
-window.addEventListener('popstate', () => loadPage(null, location.pathname));
+  window.addEventListener('popstate', () =>
+    loadPage(null, location.pathname)
+  );
 
 document.addEventListener('click', function (e) {
     if (e.target.classList.contains('like-btn')) {

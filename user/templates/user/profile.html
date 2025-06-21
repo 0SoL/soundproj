@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+
+<div class="profile-banner">
+    {% if profile.banner %}
+        <img src="{{ profile.banner.url }}" alt="Обложка" class="banner-img">
+    {% else %}
+        <img src="{% static "images/banner_placeholder.png" %}" alt="Обложка по умолчанию" class="banner-img">
+    {% endif %}
+
+    <div class="banner-overlay">
+        <div class="profile-info">
+            <div class="avatar-wrapper">
+                {% if profile.avatar %}
+                    <img src="{{ profile.avatar.url }}" alt="Аватар" class="profile-avatar">
+                {% else %}
+                    <img src="{% static "images/avatar_placeholder.png" %}" alt="Аватар по умолчанию" class="profile-avatar">
+                {% endif %}
+
+                <!-- Кнопка обновления внутри обёртки -->
+                <form method="post" action="{% url 'update_avatar' %}" enctype="multipart/form-data" class="edit-avatar-form">
+                    {% csrf_token %}
+                    <label for="avatar-upload" class="edit-avatar-btn">Update image</label>
+                    <input type="file" id="avatar-upload" name="avatar" hidden onchange="this.form.submit()">
+                </form>
+            </div>
+            
+            <div class="text-info">
+                <h2 class="username">@{{ profile.user.username }}</h2>
+                <p class="display-name">{{ profile.display_name }}</p>
+            </div>
+        </div>
+        <form method="post" action="{% url 'update_banner' %}" enctype="multipart/form-data" class="edit-banner-form">
+            {% csrf_token %}
+            <label for="banner-upload" class="edit-banner-btn">Update image</label>
+            <input type="file" id="banner-upload" name="banner" hidden onchange="this.form.submit()">
+        </form>
+    </div>
+</div>
+
+
+<link rel="stylesheet" href="{% static "styles/profile.css" %}">
+{% endblock content %}
