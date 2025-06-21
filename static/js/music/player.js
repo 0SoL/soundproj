@@ -95,9 +95,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const ctrlIcon = document.getElementById('ctrlIcon');      
   const coverImg = document.getElementById('now-playing-cover');
   const titleEl  = document.getElementById('now-playing');
-  const artistEl = document.getElementById('now-playing-artist');
+  const artistEl = document.getElementById('now-playing-artist')
+  const queueList = document.querySelector('.queue-list')
 
-  // Собираем плейлист один раз
+  // собираем плейлист один раз
   const playButtons = Array.from(document.querySelectorAll('.play-btn'));
   console.log(playButtons)
   const playlist = playButtons.map(btn => ({
@@ -106,11 +107,12 @@ document.addEventListener('DOMContentLoaded', () => {
     artist: btn.dataset.artist,
     cover:  btn.dataset.cover || '/static/images/placeholder.png'
   }));
+
   console.log(playlist)
 
   let currentIndex = 0;
 
-  // Обновляем UI в одном месте
+  // обновляем UI в одном месте
   function updateUI(track) {
     titleEl.textContent  = track.title;
     artistEl.textContent = track.artist;
@@ -120,27 +122,55 @@ document.addEventListener('DOMContentLoaded', () => {
     ctrlIcon.classList.add('pause');
   }
 
-  // Функция воспроизведения трека по индексу
+    function updateQueueUI(playlist, currentIndex) {
+    const queueList = document.querySelector('.queue-list');
+    queueList.innerHTML = '';
+
+    const nextTracks = playlist.slice(currentIndex + 1);
+
+    nextTracks.forEach((track, index) => {
+        const el = document.createElement('div');
+        el.classList.add('queue-track');
+
+        el.innerHTML = `
+        <img src="${track.cover}" alt="cover" class="queue-cover">
+        <div class="queue-info">
+            <p class="queue-artist">${track.artist}</p>
+            <p class="queue-title">${track.title}</p>
+        </div>
+        `;
+
+        el.addEventListener('click', () => {
+        playTrack(currentIndex + 1 + index);
+        });
+
+        queueList.appendChild(el);
+    });
+    }
+
+
+  // функция воспроизведения трека по индексу
   function playTrack(index) {
     currentIndex = index;
     const track = playlist[index];
     audio.src = track.url;
     updateUI(track);
     audio.play();
+    updateQueueUI(playlist, index);
   }
 
-  // Навешиваем клики на все кнопки один раз
+
+  // навешиваем клики на все кнопки один раз
   playButtons.forEach((btn, index) => {
     btn.addEventListener('click', () => playTrack(index));
   });
 
-  // Автопереход к следующему треку
+  // автопереход к след треку
   audio.addEventListener('ended', () => {
     if (currentIndex < playlist.length - 1) {
       playTrack(currentIndex + 1);
     } else {
       console.log('Плейлист завершён');
-      // при желании можно вернуть иконку в "play"
       ctrlIcon.classList.remove('pause');
       ctrlIcon.classList.add('play');
       ctrlIcon.innerHTML = `<path d="M232.4,114.49,88.32,26.35a16,16,0,0,0-16.2-.3A15.86,15.86,0,0,0,64,39.87V216.13A15.94,15.94,0,0,0,80,232a16.07,16.07,0,0,0,8.36-2.35L232.4,141.51a15.81,15.81,0,0,0,0-27ZM80,215.94V40l143.83,88Z"/>`;
@@ -349,4 +379,24 @@ song.addEventListener('timeupdate', function () {
     const pos = `${value}%`;
     musicSlider.style.setProperty('--pos', pos);
 })
+
+
+const nextUpButtonClose = document.querySelector('.close-button');
+const nextUpModal = document.querySelector('.nextup-modal');
+const nextModalContent = document.querySelector('.nextup-modal-content');
+const nextIcon = document.querySelector('.next-container');
+
+nextUpButtonClose.addEventListener("click", function () {
+    nextUpModal.classList.remove('show')
+});
+
+nextIcon.addEventListener("click", function () {
+    nextUpModal.classList.toggle('show')
+});
+
+nextUpModal.addEventListener("click", function (event) {
+  if (!nextModalContent.contains(event.target)) {
+    this.classList.remove('show');
+  }
+});
 

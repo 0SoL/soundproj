@@ -270,10 +270,12 @@ footer {
 .control-button,
 .player-play-btn,
 .progress-container,
-.volume-container {
+.volume-container,
+.next-container {
   display: flex;
   align-items: center;
   gap: 6px;
+  cursor: pointer;
 }
 
 .progress-container span {
@@ -305,3 +307,112 @@ footer {
   object-fit: cover;
 }
 */
+
+
+/* MODAL NEXT UP */
+
+.nextup-modal {
+  position: fixed;
+  right: 330px;
+  bottom: 60px;
+  width: 400px;
+  /* либо max-width: 100% для адаптива */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  opacity: 0;
+  transform: translateY(20px);
+  visibility: hidden;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  z-index: 10;
+}
+
+.nextup-modal.show {
+  opacity: 1;
+  transform: translateY(0);
+  visibility: visible;
+}
+
+.nextup-modal-content {
+  background-color: #121212;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 12px;
+  max-width: 600px;
+  min-height: 500px;
+  min-width: 500px;
+  width: 90%;
+  color: white;
+}
+
+.nextup-header {
+  display: flex;
+  margin-left: 20px;
+  font-size: 22px;
+  padding: 16px 16px 8px;
+  justify-content: space-between;
+}
+
+.close-button {
+  padding: 24px 24px 8px;
+  cursor: pointer;
+}
+
+.queue-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-height: 300px;
+  overflow-y: auto;
+  padding: 8px 0;
+}
+
+.queue-track {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px;
+  border-radius: 8px;
+  transition: background 0.2s ease;
+  cursor: pointer;
+}
+
+.queue-track:hover {
+  background-color: #2a2a2a;
+}
+
+.queue-cover {
+  width: 48px;
+  height: 48px;
+  object-fit: cover;
+  border-radius: 6px;
+}
+
+.queue-info {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  margin: 0;
+}
+
+.queue-title {
+  font-weight: bold;
+  font-size: 14px;
+  color: #fff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.queue-artist {
+  font-size: 14px;
+  color: #aaa;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.queue-title,
+.queue-artist {
+  margin: 0;
+}
