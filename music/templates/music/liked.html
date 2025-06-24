@@ -6,8 +6,8 @@
 {% for song in songs %}
     <div class='song-wrapper'> 
         <div class='song-card'>
-            {% if song.cover %}
-                <img src="{{ song.cover.url }}" alt="Обложка" class='song-cover'>
+            {% if song.album.cover %}
+                <img src="{{ song.album.cover.url }}" alt="Обложка" class='song-cover'>
             {% else %}
                 <img src="{% static 'images/placeholder.png' %}" alt="Обложка" class='song-cover'>
             {% endif %}
@@ -16,8 +16,8 @@
                     data-src="{{ song.audio_file.url }}" 
                     data-title="{{ song.title }}" 
                     data-artist="{{ song.artist }}"
-                    {% if song.cover %}
-                        data-cover="{{ song.cover.url }}"
+                    {% if song.album.cover %}
+                        data-cover="{{ song.album.cover.url }}"
                     {% else %}
                         data-cover="{% static 'images/placeholder.png' %}"
                     {% endif %}

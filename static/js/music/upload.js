@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     fileInput.addEventListener('change', function () {
         if (fileInput.files.length > 0) {
-            modal.classList.add('show');     // Показываем модалку
+            modal.classList.add('show');     
             modal.classList.remove('hidden');
             const file = fileInput.files[0];
             const name = file.name;
@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     closeBtn.addEventListener('click', function () {
-        modal.classList.remove('show');     // Скрываем модалку
+        modal.classList.remove('show');     
         modal.classList.add('hidden');
     });
 

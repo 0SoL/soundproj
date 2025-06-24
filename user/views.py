@@ -8,6 +8,10 @@ from django.views.generic import TemplateView
 from django.shortcuts import get_object_or_404
 from .models import Profile
 from django.contrib.auth.models import User
+from django.http import JsonResponse
+from django.views.decorators.http import require_POST
+from django.contrib.auth.decorators import login_required
+from music.models import Song
 
 class RegisterView(CreateView):
     form_class = RegisterForm
@@ -27,6 +31,10 @@ class UserProfileView(TemplateView):
         profile = get_object_or_404(Profile, user=user)
         context['profile'] = profile
         context['is_owner'] = (user == self.request.user)
+
+        if user == self.request.user:
+            context['liked_songs'] = user.liked_songs.all()
+
         return context
 
 
@@ -41,3 +49,16 @@ def update_avatar(request):
         request.user.profile.avatar = request.FILES['avatar']
         request.user.profile.save()
     return redirect('profile', username=request.user.username)
+
+
+@require_POST
+@login_required
+def update_spotlight(request):
+    # получаем все выбранные song_ids
+    ids = request.POST.getlist('song_ids')
+    if len(ids) > 4:
+        return JsonResponse({'error': 'Не более 4 треков!'}, status=400)
+
+    songs = Song.objects.filter(id__in=ids, liked_by=request.user)
+    request.user.profile.spotlight_songs.set(songs)
+    return JsonResponse({'message': 'Spotlight обновлён!'})

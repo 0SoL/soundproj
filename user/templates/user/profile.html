@@ -38,7 +38,120 @@
         </form>
     </div>
 </div>
+<div class="spotlight-section">
+    <div class="spotlight-header">
+        <p class="spotlight-text">Spotlight</p>
+        <button id="openSpotlightModal">Edit Spotlight</button>
+    </div>
+    <div class='song-container'>
+    {% for spot in profile.spotlight_songs.all %}
+        <div class='song-wrapper'> 
+            <div class='song-card'>
+                {% if spot.album.cover %}
+                    <img src="{{ spot.album.cover.url }}" alt="Обложка" class='song-cover'>
+                {% else %}
+                    <img src="{% static 'images/placeholder.png' %}" alt="Обложка" class='song-cover'>
+                {% endif %}
+
+                <button class="play-btn"
+                        data-src="{{ spot.audio_file.url }}" 
+                        data-title="{{ spot.title }}" 
+                        data-artist="{{ spot.artist }}"
+                        {% if spot.cover %}
+                            data-cover="{{ spot.album.cover.url }}"
+                        {% else %}
+                            data-cover="{% static 'images/placeholder.png' %}"
+                        {% endif %}
+                        >▶</button>
+                <button class="like-btn" data-id="{{ spot.id }}">
+                    <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                        <path d="M7.978 5c.653-1.334 1.644-2 2.972-2 1.992 0 3.405 1.657 2.971 4-.289 1.561-2.27 3.895-5.943 7C4.19 10.895 2.21 8.561 2.035 7c-.26-2.343.947-4 2.972-4 1.35 0 2.34.666 2.971 2z" fill="currentColor"></path>
+                    </svg>
+                </button>
+            </div>
+
+            <p class='song-title'><i class="fa-solid fa-heart"></i>{{ spot.title }}</p>
+            <p class='song-artist'>{{ spot.artist }}</p>
+        </div>
+    
+    {% endfor %}
+    </div>
+</div>
 
 
+
+
+
+
+
+<div id="spotlightModal" class="modal hidden">
+  <div class="modal-content">
+    <div class="modal-header">
+        <h3>Add 4 tracks for you spotlight!</h3>
+        <button id="closeSpotlightModal">
+            <svg height="20" width="20" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path fill="currentColor" d="M12 10.94 7.05 5.99 5.99 7.05 10.94 12l-4.95 4.95 1.06 1.06L12 13.06l4.95 4.95 1.06-1.06L13.06 12l4.95-4.95-1.06-1.06L12 10.94Z"></path></svg>
+        </button>
+    </div>
+    <form id="spotlightForm">
+    {% csrf_token %}
+      {% for song in liked_songs %}
+        <label>
+          <input type="checkbox" name="song_ids" value="{{ song.id }}"
+            {% if song in profile.spotlight_songs.all %}checked{% endif %}>
+          {{ song.title }}
+        </label><br>
+      {% endfor %}
+      <button type="submit">Add</button>
+    </form>
+  </div>
+</div>
+
+
+
+{% comment %} <script src="{% static "js/music/profile.js" %}"></script> {% endcomment %}
+ <link rel="stylesheet" href="{% static 'styles/liked.css' %}">
 <link rel="stylesheet" href="{% static "styles/profile.css" %}">
+
+<script>
+function getCookie(name) {
+  let v = document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)');
+  return v ? v.pop() : '';
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const open = document.getElementById('openSpotlightModal');
+  const close = document.getElementById('closeSpotlightModal');
+  const modal = document.getElementById('spotlightModal');
+  const form  = document.getElementById('spotlightForm');
+
+  open.addEventListener('click', () => modal.classList.remove('hidden'));
+  close.addEventListener('click', () => modal.classList.add('hidden'));
+
+  form.addEventListener('submit', e => {
+    e.preventDefault();
+    const checked = form.querySelectorAll('input[name="song_ids"]:checked');
+    if (checked.length > 4) {
+      alert('Нельзя больше 4 треков');
+      return;
+    }
+
+    const data = new FormData(form);
+    fetch("{% url 'update_spotlight' %}", {
+      method: 'POST',
+      headers: { 'X-CSRFToken': getCookie('csrftoken') },
+      body: data,
+    })
+    .then(r => r.json())
+    .then(json => {
+      if (json.error) {
+        alert(json.error);
+      } else {
+        alert(json.message);
+        location.reload();
+      }
+    })
+    .catch(() => alert('Ошибка на сервере'));
+  });
+});
+</script>
 {% endblock content %}
