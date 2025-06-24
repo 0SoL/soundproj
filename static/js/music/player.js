@@ -205,22 +205,32 @@
   );
 
 document.addEventListener('click', function (e) {
-    if (e.target.classList.contains('like-btn')) {
-        const songId = e.target.dataset.id;
+    const btn = e.target.closest('.like-btn');
+    if (!btn) return;
 
-        fetch('/music/like/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-                'X-CSRFToken': getCookie('csrftoken')
-            },
-            body: `song_id=${songId}`
-        })
-        .then(res => res.json())
-        .then(data => {
-            e.target.textContent = data.liked ? '❤️' : '🤍';
-        });
-    }
+    const songId = btn.dataset.id;
+    fetch('/music/like/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'X-CSRFToken': getCookie('csrftoken')
+      },
+      body: `song_id=${encodeURIComponent(songId)}`
+    })
+    .then(res => res.json())
+    .then(data => {
+      // обновляем SVG-путь, не затирая структуру
+      const path = btn.querySelector('path');
+      if (path) {
+        path.setAttribute('fill', data.liked ? 'currentColor' : '#000');
+      }
+      if (!data.liked) {
+        const wrapper = btn.closest('.song-wrapper');
+        if (wrapper) wrapper.remove();
+      }
+      console.log(data.liked)
+    })
+    .catch(console.error);
 });
 
 // Функция получения CSRF токена

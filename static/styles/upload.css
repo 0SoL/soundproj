@@ -78,16 +78,14 @@ input[type="file"] {
   background-color: rgb(18, 18, 18); /* затемнение */
   display: flex;
   justify-content: center;
-  align-items: center;
   z-index: 9999;
 }
 
 .modal-content {
   background-color: #121212;
-  padding: 32px;
   border-radius: 12px;
-  max-width: 900px;
-  width: 90%;
+  max-width: 1000px;
+  width: 100%;
   color: white;
 }
 
@@ -96,25 +94,51 @@ input[type="file"] {
   gap: 32px;
   margin-bottom: 20px;
   flex-wrap: wrap;
+  padding-top: 20px;
 }
 
 .modal-header {
-    padding: 10px 32px;
+    /* padding: 10px 32px; */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
 }
-.modal-header p {
-    font-size: 16px;
-    font-weight: 700;
-    color: white;
+.left-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 16px;
+  font-weight: 700;
+  color: white;
+}
+
+.right-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.right-header p {
+  font-size: 12px;
+}
+
+
+.close-modal-button {
+  margin-left: auto;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
 }
 
 .load-cover-container {
-  width: 100%;
-  max-width: 300px;
-  min-width: 240px;
+  max-width: 400x;
+  max-height: 400px;
 }
 
 .cover-header {
-  height: 240px;
+  height: 400px;
+  width: 400px;
   border: 2px dashed rgba(255, 255, 255, 0.15);
   border-radius: 10px;
   display: flex;
@@ -123,6 +147,7 @@ input[type="file"] {
   align-items: center;
   transition: border-color 0.3s ease-in-out;
   padding: 16px;
+  margin-right: 40px;
 }
 
 .cover-header:hover {
@@ -136,8 +161,110 @@ input[type="file"] {
 
 .track-info-container {
   flex: 1;
-  min-width: 200px;
+  max-width: 600px;
 }
-/* .upload-modal.hidden {
-  display: none;
+
+.load-input input {
+  padding: 4px 0px 5px;
+  border: 0px;
+  box-sizing: content-box;
+  background: none;
+  height: 1.4375em;
+  margin: 0px;
+  min-width: 0px;
+  width: 100%;
+  font-size: 14px;
+  line-height: 20px;
+  -webkit-tap-highlight-color: transparent;
+  outline: 0px;
+  color: white;
+}
+
+.load-input {
+  position: relative;
+  margin-bottom: 30px;
+}
+
+.load-input::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.3);  /* серая линия */
+  z-index: 0;
+}
+
+
+.load-input::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0%;
+  width: 100%;
+  height: 2px;
+  background: white;
+  transform: scaleX(0);
+  transform-origin: center;
+  transition: transform 0.3s ease;
+  z-index: 2;
+}
+
+.load-input:focus-within::after {
+  transform: scaleX(1);
+}
+
+/* .load-input {
+  font-family: __Inter_386c1d, __Inter_Fallback_386c1d;
+    font-weight: 400;
+    font-size: 1rem;
+    line-height: 1.4375em;
+    color: var(--mui-palette-text-primary);
+    box-sizing: border-box;
+    cursor: text;
+    display: inline-flex;
+    -webkit-box-align: center;
+    align-items: center;
+    position: relative;
+    min-height: 40px;
 } */
+
+.load-input label {
+  font-size: 12px;
+  font-weight: 400;
+}
+
+.track-info-container button {
+    display: inline-flex;
+    -webkit-box-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    justify-content: center;
+    position: relative;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+    outline: 0px;
+    margin: 0px;
+    cursor: pointer;
+    user-select: none;
+    vertical-align: middle;
+    appearance: none;
+    text-decoration: none;
+    text-transform: none;
+    min-width: 64px;
+    box-shadow: none;
+    border: none;
+    border-radius: 100px;
+    white-space: nowrap;
+    color: rgb(18 18 18 / 87%);
+    background-color: #66bb6a;
+    font-weight: 700;
+    font-size: 14px;
+    line-height: 20px;
+    padding: 10px 16px;
+}
+
+.upload-modal.hidden {
+  display: none;
+}
