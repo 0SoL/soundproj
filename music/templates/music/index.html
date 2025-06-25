@@ -4,14 +4,23 @@
 <h2>All Songs</h2>
 <div class='song-container'>
 {% for song in songs %}
-    <div class='song-wrapper'>  <!-- Добавили wrapper -->
+    <div class='song-wrapper'>  
         <div class='song-card'>
             {% if song.album.cover %}
                 <img src="{{ song.album.cover.url }}" alt="Обложка" class='song-cover'>
             {% else %}
                 <div class='song-cover' style="background: #ccc;"></div>
             {% endif %}
-            <button class="play-btn" data-src="{{ song.audio_file.url }}" data-title="{{ song.title }}" data-artist="{{ song.artist }}">▶</button>
+            <button class="play-btn" 
+                    data-src="{{ song.audio_file.url }}" 
+                    data-title="{{ song.title }}" 
+                    data-artist="{{ song.artist }}"
+                    {% if song.album.cover %}
+                        data-cover="{{ song.album.cover.url }}"
+                    {% else %}
+                        data-cover="{% static 'images/placeholder.png' %}"
+                    {% endif %}>▶
+            </button>
             <button class="like-btn" data-id="{{ song.id }}">
                 {% if song.id in liked_songs %}
                     <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">

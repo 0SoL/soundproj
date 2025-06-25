@@ -207,6 +207,10 @@
 
 
 /* SPOTLIGHT SECTION  */
+.spotlight-section {
+    padding-bottom: 40px;
+}
+
 .spotlight-header {
     display: flex;
     justify-content: space-between;
@@ -224,6 +228,13 @@
 }
 
 .spotlight-text {
+    font-size: 22px;
+    font-weight: 700;
+    color: white;
+}
+
+/* RECENT SECTION  */
+.recent-header p {
     font-size: 22px;
     font-weight: 700;
     color: white;

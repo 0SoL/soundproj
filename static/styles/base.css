@@ -36,7 +36,6 @@ body {
 }
 
 .header-links {
-  padding: 8px 16px;
   display: flex;
   align-items: center;
   gap: 16px;
@@ -58,8 +57,8 @@ footer {
 .parent {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
-    grid-template-rows: repeat(5, 1fr);
-    gap: 8px;
+    /* grid-template-rows: repeat(5, 1fr); */
+    /* gap: 8px; */
 }
     
 .div1 {
@@ -67,6 +66,7 @@ footer {
     padding: 0px 16px;
     margin: 0px 228px;
     color: white;
+    max-height: 120px;
 }
 
 .div2 {
@@ -85,8 +85,7 @@ footer {
 }
 
 .div1, .div2, .div3 {
-    border: 1px solid black;
-    padding: 10px;
+    /* border: 1px solid black; */
 }
 
 .logo {

@@ -11,7 +11,7 @@ from django.contrib.auth.models import User
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 from django.contrib.auth.decorators import login_required
-from music.models import Song
+from music.models import Song, Repost
 
 class RegisterView(CreateView):
     form_class = RegisterForm
@@ -27,14 +27,23 @@ class UserProfileView(TemplateView):
 
         username = self.kwargs['username']
         user = get_object_or_404(User, username=username)
-
         profile = get_object_or_404(Profile, user=user)
+        
         context['profile'] = profile
         context['is_owner'] = (user == self.request.user)
+        
+        reposts = Repost.objects.filter(user=user).select_related('song')
+        uploads = Song.objects.filter(uploaded_by=user)
+        recent = sorted(
+            list(reposts) + list(uploads),
+            key=lambda x: x.timestamp if hasattr(x, 'timestamp') else x.uploaded_at,
+            reverse=True
+        )
 
         if user == self.request.user:
             context['liked_songs'] = user.liked_songs.all()
-
+            context['recent_activity'] = recent
+        print(type(recent[3]))
         return context
 
 

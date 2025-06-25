@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
+{% load classname %}
 {% block content %}
 
 <div class="profile-banner">
@@ -57,7 +58,7 @@
                         data-src="{{ spot.audio_file.url }}" 
                         data-title="{{ spot.title }}" 
                         data-artist="{{ spot.artist }}"
-                        {% if spot.cover %}
+                        {% if spot.album.cover %}
                             data-cover="{{ spot.album.cover.url }}"
                         {% else %}
                             data-cover="{% static 'images/placeholder.png' %}"
@@ -73,9 +74,24 @@
             <p class='song-title'><i class="fa-solid fa-heart"></i>{{ spot.title }}</p>
             <p class='song-artist'>{{ spot.artist }}</p>
         </div>
-    
     {% endfor %}
     </div>
+</div>
+<div class="recent-section">
+  <div class="recent-header">
+      <p>Recent</p>
+    <ul class="recent-list">
+      {% for item in recent_activity %}
+        <li>
+          {% if item|get_class == "Repost" %}
+            Репост: {{ item.song.title }} от {{ item.song.artist }}
+          {% else %}
+            Загрузил: {{ item.title }}
+          {% endif %}
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
 </div>
 
 
@@ -118,17 +134,24 @@ function getCookie(name) {
   return v ? v.pop() : '';
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-  const open = document.getElementById('openSpotlightModal');
-  const close = document.getElementById('closeSpotlightModal');
-  const modal = document.getElementById('spotlightModal');
-  const form  = document.getElementById('spotlightForm');
+document.addEventListener('click', function (e) {
+  // открыть Spotlight-модалку
+  if (e.target.matches('#openSpotlightModal')) {
+    document.getElementById('spotlightModal')?.classList.remove('hidden');
+  }
 
-  open.addEventListener('click', () => modal.classList.remove('hidden'));
-  close.addEventListener('click', () => modal.classList.add('hidden'));
+  // закрыть Spotlight-модалку (по кнопке или вложенному svg)
+  if (e.target.matches('#closeSpotlightModal') || e.target.closest('#closeSpotlightModal')) {
+    document.getElementById('spotlightModal')?.classList.add('hidden');
+  }
+});
 
-  form.addEventListener('submit', e => {
+// обработка отправки формы Spotlight
+document.addEventListener('submit', function (e) {
+  if (e.target.matches('#spotlightForm')) {
     e.preventDefault();
+    const form = e.target;
+
     const checked = form.querySelectorAll('input[name="song_ids"]:checked');
     if (checked.length > 4) {
       alert('Нельзя больше 4 треков');
@@ -147,11 +170,11 @@ document.addEventListener('DOMContentLoaded', () => {
         alert(json.error);
       } else {
         alert(json.message);
-        location.reload();
+        location.reload(); 
       }
     })
     .catch(() => alert('Ошибка на сервере'));
-  });
+  }
 });
 </script>
 {% endblock content %}

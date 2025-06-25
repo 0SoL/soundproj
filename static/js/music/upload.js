@@ -28,7 +28,6 @@ document.addEventListener('DOMContentLoaded', function () {
         modal.classList.add('hidden');
     });
 
-    // Чтобы скрывать модалку при клике вне её
     modal.addEventListener('click', function (event) {
         const content = modal.querySelector('.modal-content');
         if (!content.contains(event.target)) {

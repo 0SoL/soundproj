@@ -99,17 +99,17 @@
     const queueListEl = document.querySelector('.queue-list');
     const playButtons = Array.from(document.querySelectorAll('.play-btn'));
 
-    // Если на этой странице нет плеера — выходим
+
     if (!audio || playButtons.length === 0) return;
 
-    // Собираем плейлист
+    // собираем плейлист
     const playlist = playButtons.map(btn => ({
       url:    btn.dataset.src,
       title:  btn.dataset.title,
       artist: btn.dataset.artist,
       cover:  btn.dataset.cover || '/static/images/placeholder.png'
     }));
-
+    console.log(playlist)
     let currentIndex = 0;
 
     function updateUI(track) {
@@ -179,10 +179,9 @@
     });
   }
 
-  // 2. Инициализируем при первой загрузке
   document.addEventListener('DOMContentLoaded', initMusic);
 
-  // 3. AJAX-переход
+
   function loadPage(event, url) {
     event?.preventDefault();
     fetch(url)
@@ -219,7 +218,7 @@ document.addEventListener('click', function (e) {
     })
     .then(res => res.json())
     .then(data => {
-      // обновляем SVG-путь, не затирая структуру
+      // обновляем SVG, не затирая структуру
       const path = btn.querySelector('path');
       if (path) {
         path.setAttribute('fill', data.liked ? 'currentColor' : '#000');
@@ -233,7 +232,7 @@ document.addEventListener('click', function (e) {
     .catch(console.error);
 });
 
-// Функция получения CSRF токена
+// функция получения CSRF токена
 function getCookie(name) {
     let cookieValue = null;
     if (document.cookie && document.cookie !== '') {
