@@ -234,8 +234,96 @@
 }
 
 /* RECENT SECTION  */
-.recent-header p {
+.recent-text {
     font-size: 22px;
     font-weight: 700;
     color: white;
 }
+
+.recent-section { 
+    padding-bottom: 100px;
+}
+
+.recent-content {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.recent-object {
+    display: flex;
+    gap: 20px;
+}
+
+.repost-line {
+  display: flex;
+  flex-direction: column; /* Элементы идут сверху вниз */
+  font-size: 14px;
+  color: #999999;
+  gap: 5px;
+}
+
+.repost-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 500px;
+}
+
+.repost-info {
+  display: flex;
+  align-items: center;
+    flex: 1;
+  min-width: 0;
+}
+
+.repost-line a {
+  text-decoration: none;
+    color: #999999;
+}
+
+.item-title {
+  margin: 2px 0 0 0;
+  font-weight: 500;
+  font-size: 14px;
+  color: white;
+}
+
+
+
+.repost-timestamp p {
+  margin: 0;
+  font-size: 12px;
+  color: #ccc;
+}
+
+.repost-title-genre {
+   display: flex;
+  justify-content: space-between; /* это расталкивает .repost-info и .repost-timestamp */
+  align-items: center;
+}
+
+.genre-box {
+    background: #303030;
+    padding: 2px 8px; /* top | right | bottom | left */
+    border-radius: 100px;
+    color: #fff;
+    height: 24px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.genre-box span{
+    color: white;
+    font-weight: 100;
+}
+
+/* .repost-timestamp {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  max-width: 200px;
+  overflow: hidden;
+  margin-left: auto;
+} */

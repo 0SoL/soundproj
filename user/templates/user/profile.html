@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% load static %}
 {% load classname %}
+{% load l10n %}
 {% block content %}
 
 <div class="profile-banner">
@@ -39,6 +40,9 @@
         </form>
     </div>
 </div>
+        <div id="waveform"></div>
+        <audio id="audio_test" src="/static/Playboi Carti - ROCKSTAR (Official Audio) HQ (V3).mp3"></audio>
+        <button onclick="wavesurfer.playPause()">Play/Pause</button>
 <div class="spotlight-section">
     <div class="spotlight-header">
         <p class="spotlight-text">Spotlight</p>
@@ -79,18 +83,131 @@
 </div>
 <div class="recent-section">
   <div class="recent-header">
-      <p>Recent</p>
-    <ul class="recent-list">
-      {% for item in recent_activity %}
-        <li>
-          {% if item|get_class == "Repost" %}
-            Репост: {{ item.song.title }} от {{ item.song.artist }}
-          {% else %}
-            Загрузил: {{ item.title }}
-          {% endif %}
-        </li>
-      {% endfor %}
-    </ul>
+    <p class="recent-text">Recent</p>
+      <div class="recent-content">
+        {% for item in recent_activity %}
+          <div class="recent-object">
+            {% if item|get_class == "Repost" %}
+              <div class='song-wrapper'> 
+                <div class='song-card'>
+                {% if item.song.album.cover %}
+                <img src="{{ item.song.album.cover.url }}" alt="Обложка" class='song-cover'>
+                {% else %}
+                <img src="{% static 'images/placeholder.png' %}" alt="Обложка" class='song-cover'>
+                {% endif %}
+
+                <button class="play-btn"
+                  data-src="{{ item.song.audio_file.url }}" 
+                  data-title="{{ item.song.title }}" 
+                  data-artist="{{ item.song.artist }}"
+                  {% if item.song.album.cover %}
+                      data-cover="{{ item.song.album.cover.url }}"
+                  {% else %}
+                      data-cover="{% static 'images/placeholder.png' %}"
+                  {% endif %}
+                  >▶</button>
+                <button class="like-btn" data-id="{{ item.song.id }}">
+                <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                  <path d="M7.978 5c.653-1.334 1.644-2 2.972-2 1.992 0 3.405 1.657 2.971 4-.289 1.561-2.27 3.895-5.943 7C4.19 10.895 2.21 8.561 2.035 7c-.26-2.343.947-4 2.972-4 1.35 0 2.34.666 2.971 2z" fill="currentColor"></path>
+                </svg>
+                </button>
+                </div>
+              </div>
+            <div class="repost-line">
+              <div class="repost-top">
+                <div class="repost-info">
+                  <a href="/user/{{ item.song.uploaded_by.username }}/" onclick="loadPage(event, '/user/{{ item.song.uploaded_by.username }}/')">
+                    {{ item.song.uploaded_by }}
+                  </a>
+                  <svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <path d="M7.08034 5.71966L4.05001 2.68933L1.01968 5.71966L2.08034 6.78032L3.30002 5.56065V9.75C3.30002 11.2688 4.53124 12.5 6.05002 12.5H8.05002V11H6.05002C5.35966 11 4.80002 10.4404 4.80002 9.75V5.56066L6.01968 6.78032L7.08034 5.71966Z" fill="currentColor"></path>
+                    <path d="M11.95 13.3107L8.91969 10.2803L9.98035 9.21968L11.2 10.4393L11.2 5.75C11.2 5.05964 10.6404 4.5 9.95001 4.5L7.95001 4.5L7.95001 3L9.95001 3C11.4688 3 12.7 4.23122 12.7 5.75L12.7 10.4394L13.9197 9.21968L14.9803 10.2803L11.95 13.3107Z" fill="currentColor"></path>
+                  </svg>
+                  <a href="/user/{{ profile.user.username }}/" onclick="loadPage(event, '/user/{{ profile.user.username }}/')">
+                    {{ profile.user.username }}
+                  </a>
+                </div>
+
+                <div class="repost-timestamp">
+                  <p>{{ item.timestamp|timesince }} назад</p>
+                </div>
+                
+              </div>
+              <div class="repost-title-genre">
+                <div class="repost-item-title">
+                  <p class="item-title">{{item.song.title}}</p>
+                </div>
+                <div class="repost-item-genre">
+                  <div class="genre-container">
+                    <a href="" class="genre-box">
+                      <span># {{item.song.genre}}</span>
+                    </a>
+                    
+                  </div>
+                </div>
+              </div>
+            </div>
+            {% else %}
+              <div class='song-wrapper'> 
+                <div class='song-card'>
+                {% if item.album.cover %}
+                <img src="{{ item.album.cover.url }}" alt="Обложка" class='song-cover'>
+                {% else %}
+                <img src="{% static 'images/placeholder.png' %}" alt="Обложка" class='song-cover'>
+                {% endif %}
+
+                <button class="play-btn"
+                  data-src="{{ item.audio_file.url }}" 
+                  data-title="{{ item.title }}" 
+                  data-artist="{{ item.artist }}"
+                  {% if item.album.cover %}
+                      data-cover="{{ item.album.cover.url }}"
+                  {% else %}
+                      data-cover="{% static 'images/placeholder.png' %}"
+                  {% endif %}
+                  >▶</button>
+                <button class="like-btn" data-id="{{ item.id }}">
+                <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                  <path d="M7.978 5c.653-1.334 1.644-2 2.972-2 1.992 0 3.405 1.657 2.971 4-.289 1.561-2.27 3.895-5.943 7C4.19 10.895 2.21 8.561 2.035 7c-.26-2.343.947-4 2.972-4 1.35 0 2.34.666 2.971 2z" fill="currentColor"></path>
+                </svg>
+                </button>
+                </div>
+              </div>
+            
+            <div class="repost-line">
+              <div class="repost-top">
+                <div class="repost-info">
+                  <a href="/user/{{ item.uploaded_by.username }}/" onclick="loadPage(event, '/user/{{ item.uploaded_by.username }}/')">
+                    {{ item.song.uploaded_by }}
+                  </a>
+                  <a href="/user/{{ profile.user.username }}/" onclick="loadPage(event, '/user/{{ profile.user.username }}/')">
+                    {{ profile.user.username }}
+                  </a>
+                </div>
+
+                <div class="repost-timestamp">
+                  <p>{{ item.uploaded_at|timesince }} назад</p>
+                </div>
+                
+              </div>
+              <div class="repost-title-genre">
+                <div class="repost-item-title">
+                  <p class="item-title">{{item.title}}</p>
+                </div>
+                <div class="repost-item-genre">
+                  <div class="genre-container">
+                    <a href="" class="genre-box">
+                      <span># {{item.genre}}</span>
+                    </a>
+                    
+                  </div>
+                </div>
+              </div>
+            </div>
+            {% endif %}
+          </div>
+        {% endfor %}
+      </div>
   </div>
 </div>
 
@@ -127,6 +244,21 @@
 {% comment %} <script src="{% static "js/music/profile.js" %}"></script> {% endcomment %}
  <link rel="stylesheet" href="{% static 'styles/liked.css' %}">
 <link rel="stylesheet" href="{% static "styles/profile.css" %}">
+
+
+
+<script src="https://unpkg.com/wavesurfer.js"></script>
+<script>
+  const wavesurfer = WaveSurfer.create({
+    container: '#waveform',
+    waveColor: '#ccc',
+    progressColor: '#555',
+    height: 80,
+    responsive: true
+  });
+
+  wavesurfer.load(document.getElementById('audio_test').src);
+</script>
 
 <script>
 function getCookie(name) {

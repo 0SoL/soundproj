@@ -43,7 +43,7 @@ class UserProfileView(TemplateView):
         if user == self.request.user:
             context['liked_songs'] = user.liked_songs.all()
             context['recent_activity'] = recent
-        print(type(recent[3]))
+        print(recent)
         return context
 
 
