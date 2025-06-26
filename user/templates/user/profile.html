@@ -40,9 +40,6 @@
         </form>
     </div>
 </div>
-        <div id="waveform"></div>
-        <audio id="audio_test" src="/static/Playboi Carti - ROCKSTAR (Official Audio) HQ (V3).mp3"></audio>
-        <button onclick="wavesurfer.playPause()">Play/Pause</button>
 <div class="spotlight-section">
     <div class="spotlight-header">
         <p class="spotlight-text">Spotlight</p>
@@ -146,6 +143,9 @@
                   </div>
                 </div>
               </div>
+
+              <div class="waveform" data-src="{{ item.song.audio_file.url }}" id="waveform-{{ forloop.counter }}"></div>
+
             </div>
             {% else %}
               <div class='song-wrapper'> 
@@ -203,6 +203,8 @@
                   </div>
                 </div>
               </div>
+
+            <div class="waveform" data-src="{{ item.audio_file.url }}" id="waveform-{{ forloop.counter }}"></div>
             </div>
             {% endif %}
           </div>
@@ -249,15 +251,30 @@
 
 <script src="https://unpkg.com/wavesurfer.js"></script>
 <script>
-  const wavesurfer = WaveSurfer.create({
-    container: '#waveform',
-    waveColor: '#ccc',
-    progressColor: '#555',
-    height: 80,
-    responsive: true
-  });
+window.wavesurfers = {};
 
-  wavesurfer.load(document.getElementById('audio_test').src);
+document.addEventListener("DOMContentLoaded", () => {
+  const waveformElements = document.querySelectorAll(".waveform");
+
+  waveformElements.forEach((el, i) => {
+    const audioUrl = el.dataset.src;
+    const wavesurfer = WaveSurfer.create({
+      container: el,
+      waveColor: '#aaa',
+      progressColor: '#ff5500',
+      height: 60,
+      responsive: true,
+      barWidth: 2,
+    });
+
+    wavesurfer.load(audioUrl);
+    console.log(audioUrl)
+
+    // Сохраняем экземпляр под ключом URL или индексом
+    window.wavesurfers[audioUrl] = wavesurfer;
+
+  });
+});
 </script>
 
 <script>

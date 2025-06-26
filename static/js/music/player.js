@@ -90,6 +90,8 @@
 //     }
 // });
 
+window.currentWs = null;
+
   function initMusic() {
     const audio       = document.getElementById('player');
     const ctrlIcon    = document.getElementById('ctrlIcon');
@@ -141,10 +143,19 @@
     function playTrack(i) {
       currentIndex = i;
       const track = playlist[i];
+      const ws = window.wavesurfers[track.url];
       audio.src    = track.url;
+      if (!ws) return;
+      console.log(ws)
+      if (window.currentWs && window.currentWs !== ws) {
+        window.currentWs.stop();    // останавливает и сбрасывает позицию на 0
+      }
+      ws.stop();
+      ws.play();
+      window.currentWs = ws;
       updateUI(track);
-      audio.play();
       updateQueueUI(playlist, i);
+      // audio.play();
     }
 
     // навешиваем кнопки

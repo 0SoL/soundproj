@@ -37,5 +37,11 @@
     Пока ничего не лайкнуто
 {% endfor %}
 </div>
+
+<div id="waveform"></div>
+<audio id="audio" src="/media/mysong.mp3"></audio>
+<button onclick="wavesurfer.playPause()">Play/Pause</button>
+
+
 <link rel="stylesheet" href="{% static 'styles/liked.css' %}">
 {% endblock %}
