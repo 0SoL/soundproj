@@ -1,96 +1,30 @@
-// document.addEventListener('click', function (e) {
-//     if (e.target.classList.contains('play-btn')) {
-//         e.preventDefault();
-//         // const coverImg = document.getElementById('now-playing-cover');
-//         // const audio = document.getElementById('player');
-//         // const tracks = document.querySelector('play-btn');
-        
-//         // // creating a playlist
-
-
-//         // const src = e.target.dataset.src;
-//         // audio.src = src;
-        
-//         // audio.play();
-//         // console.log(e.target.dataset.artist)
-
-//         // ctrlIcon.innerHTML = '<path d="M200,32H160a16,16,0,0,0-16,16V208a16,16,0,0,0,16,16h40a16,16,0,0,0,16-16V48A16,16,0,0,0,200,32Zm0,176H160V48h40ZM96,32H56A16,16,0,0,0,40,48V208a16,16,0,0,0,16,16H96a16,16,0,0,0,16-16V48A16,16,0,0,0,96,32Zm0,176H56V48H96Z">'
-//         // ctrlIcon.classList.remove('play');
-//         // ctrlIcon.classList.add('pause');
-//         // // обращаюсь к html 
-//         // document.getElementById('now-playing').textContent = e.target.dataset.title;
-//         // document.getElementById('now-playing-artist').textContent = e.target.dataset.artist;
-//         // coverImg.src = e.target.dataset.cover;
-//         // if (e.target.dataset.cover) {
-//         //     coverImg.src = e.target.dataset.cover;
-//         // } else {
-//         //     coverImg.src = '/static/images/placeholder.png';
-//         // }
-//         const audio = document.getElementById('player');
-//         const playButtons = document.querySelectorAll(".play-btn");
-//         const coverImg = document.getElementById('now-playing-cover');
-
-//         const playlist = Array.from(playButtons).map(btn => ({
-//             url: btn.dataset.src,
-//             title: btn.dataset.title,
-//             artist: btn.dataset.artist,
-//             cover: btn.dataset.cover
-//         }));
-
-//         let currentIndex = 0;
-
-//         function playTrack(index) {
-//             currentIndex = index;
-//             const track = playlist[index];
-//             audio.src = track.url;
-//             audio.play()
-
-//             ctrlIcon.innerHTML = '<path d="M200,32H160a16,16,0,0,0-16,16V208a16,16,0,0,0,16,16h40a16,16,0,0,0,16-16V48A16,16,0,0,0,200,32Zm0,176H160V48h40ZM96,32H56A16,16,0,0,0,40,48V208a16,16,0,0,0,16,16H96a16,16,0,0,0,16-16V48A16,16,0,0,0,96,32Zm0,176H56V48H96Z">'
-//             ctrlIcon.classList.remove('play');
-//             ctrlIcon.classList.add('pause');
-
-//             // обращаюсь к html 
-//             document.getElementById('now-playing').textContent = e.target.dataset.title;
-//             document.getElementById('now-playing-artist').textContent = e.target.dataset.artist;
-//             coverImg.src = e.target.dataset.cover;
-//             if (e.target.dataset.cover) {
-//                 coverImg.src = e.target.dataset.cover;
-//             } else {
-//                 coverImg.src = '/static/images/placeholder.png';
-//             }
-//         }
-
-//         playButtons.forEach((btn, index) => {
-//         btn.addEventListener("click", () => {
-//             playTrack(index);
-//         });
-//         });
-
-//         audio.addEventListener("ended", () => {
-//         if (currentIndex < playlist.length - 1) {
-//             playTrack(currentIndex + 1);
-
-//             ctrlIcon.innerHTML = '<path d="M200,32H160a16,16,0,0,0-16,16V208a16,16,0,0,0,16,16h40a16,16,0,0,0,16-16V48A16,16,0,0,0,200,32Zm0,176H160V48h40ZM96,32H56A16,16,0,0,0,40,48V208a16,16,0,0,0,16,16H96a16,16,0,0,0,16-16V48A16,16,0,0,0,96,32Zm0,176H56V48H96Z">'
-//             ctrlIcon.classList.remove('play');
-//             ctrlIcon.classList.add('pause');
-
-//             // обращаюсь к html 
-//             document.getElementById('now-playing').textContent = e.target.dataset.title;
-//             document.getElementById('now-playing-artist').textContent = e.target.dataset.artist;
-//             coverImg.src = e.target.dataset.cover;
-//             if (e.target.dataset.cover) {
-//                 coverImg.src = e.target.dataset.cover;
-//             } else {
-//                 coverImg.src = '/static/images/placeholder.png';
-//             }
-//         } else {
-//             console.log("Конец плейлиста");
-//         }
-//         });
-//     }
-// });
-
+const audioForWavefrom = document.getElementById('player');
 window.currentWs = null;
+document.addEventListener('DOMContentLoaded', () => {
+  const waveformElements = document.querySelectorAll('.waveform');
+
+  if (waveformElements.length === 0) return;
+
+  const audio = document.getElementById('player');
+
+  waveformElements.forEach((el) => {
+    const src = el.dataset.src;
+
+    const ws = WaveSurfer.create({
+      container: el,
+      backend: 'MediaElement',
+      waveColor: '#ccc',
+      progressColor: '#ff5500',
+      height: 60,
+      responsive: true,
+      barWidth: 2,
+    });
+    console.log("Tut ws",ws)
+    ws.load(src);
+    window.wavesurfers = window.wavesurfers || {};
+    window.wavesurfers[src] = ws;
+  });
+});
 
   function initMusic() {
     const audio       = document.getElementById('player');
@@ -143,19 +77,11 @@ window.currentWs = null;
     function playTrack(i) {
       currentIndex = i;
       const track = playlist[i];
-      const ws = window.wavesurfers[track.url];
       audio.src    = track.url;
-      if (!ws) return;
-      console.log(ws)
-      if (window.currentWs && window.currentWs !== ws) {
-        window.currentWs.stop();    // останавливает и сбрасывает позицию на 0
-      }
-      ws.stop();
-      ws.play();
-      window.currentWs = ws;
+
       updateUI(track);
       updateQueueUI(playlist, i);
-      // audio.play();
+      audio.play()
     }
 
     // навешиваем кнопки
@@ -206,7 +132,7 @@ window.currentWs = null;
         document.querySelector('.parent').className      = doc.querySelector('.parent').className;
         window.history.pushState({}, '', url);
 
-        initMusic();  // <— обязательно заново привязываем плеер
+        initMusic();  
       });
   }
 
@@ -272,6 +198,8 @@ song.onloadedmetadata = function () {
 }
 
 function playPause () {
+    const ws = window.currentWs; 
+
     if(ctrlIcon.classList.contains('play')) {
         song.play()
         ctrlIcon.classList.remove('play');

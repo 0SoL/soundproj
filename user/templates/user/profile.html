@@ -218,7 +218,6 @@
 
 
 
-
 <div id="spotlightModal" class="modal hidden">
   <div class="modal-content">
     <div class="modal-header">
@@ -251,7 +250,7 @@
 
 <script src="https://unpkg.com/wavesurfer.js"></script>
 <script>
-window.wavesurfers = {};
+{% comment %} window.wavesurfers = {};
 
 document.addEventListener("DOMContentLoaded", () => {
   const waveformElements = document.querySelectorAll(".waveform");
@@ -274,7 +273,7 @@ document.addEventListener("DOMContentLoaded", () => {
     window.wavesurfers[audioUrl] = wavesurfer;
 
   });
-});
+});  {% endcomment %}
 </script>
 
 <script>
