@@ -15,8 +15,10 @@ from music.models import Song, Repost
 
 class RegisterView(CreateView):
     form_class = RegisterForm
-    template_name = 'register.html'
+    template_name = 'user/register.html'
     success_url = reverse_lazy('login')
+    
+
 # Create your views here.
 class UserProfileView(TemplateView):
     template_name = 'user/profile.html'

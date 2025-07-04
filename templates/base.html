@@ -16,9 +16,12 @@
                 <a href="/music/liked/" onclick="loadPage(event, '/music/liked/')">Liked</a>
                 <a href="/user/{{ user.username }}/" onclick="loadPage(event, '/user/{{ user.username }}/')">Profile</a>
                 {% if user.is_authenticated %}
-                    <a href="/logout/">Logout</a>
+                    <form method="POST" action="{% url 'logout' %}">
+                        {% csrf_token %}
+                        <button class="logout-button" type="submit">Logout</button>
+                    </form>
                 {% else %}
-                    <a href="/login/" onclick="loadPage(event, '/login/')">Login</a>
+                    <a href="/user/login/" onclick="loadPage(event, '/user/login/')">Login</a>
                 {% endif %}
                 <button id="theme-toggle" aria-label="Переключить тему" style="background:none;border:none;font-size:1.2rem;cursor:pointer"> 🌓</button>
             </div>
@@ -122,8 +125,10 @@
             </div>
         </div>
     </div>
+    <script src="https://unpkg.com/@barba/core"></script>
     <script src="https://unpkg.com/wavesurfer.js"></script> 
     <script src="{% static "js/music/soundcloud-waveform.js" %}"></script>
+    <script src="{% static "js/music/upload.js" %}"></script>
     <script src="{% static 'js/music/player.js' %}"></script>
     <script>
         const toggle = document.getElementById('theme-toggle');

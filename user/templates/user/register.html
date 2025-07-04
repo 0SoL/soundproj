@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+
+<h1>zalupa</h1>
+<form action="">
+    {% csrf_token %}
+    {{ form.as_p }}
+</form>
+{% endblock content %}

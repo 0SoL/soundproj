@@ -1,6 +1,6 @@
 const audioForWavefrom = document.getElementById('player');
 window.currentWs = null;
-document.addEventListener('DOMContentLoaded', () => {
+function initWaveForm() {
   const waveformElements = document.querySelectorAll('.waveform');
 
   if (waveformElements.length === 0) return;
@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const ws = WaveSurfer.create({
       container: el,
-      backend: 'MediaElement',
+      backend: 'WebAudio',
       waveColor: '#ccc',
       progressColor: '#ff5500',
       height: 60,
@@ -24,7 +24,8 @@ document.addEventListener('DOMContentLoaded', () => {
     window.wavesurfers = window.wavesurfers || {};
     window.wavesurfers[src] = ws;
   });
-});
+}
+document.addEventListener('DOMContentLoaded', initWaveForm)
 
   function initMusic() {
     const audio       = document.getElementById('player');
@@ -133,6 +134,8 @@ document.addEventListener('DOMContentLoaded', () => {
         window.history.pushState({}, '', url);
 
         initMusic();  
+        initUploadModal();
+        initWaveForm();
       });
   }
 
@@ -327,4 +330,3 @@ nextUpModal.addEventListener("click", function (event) {
     this.classList.remove('show');
   }
 });
-

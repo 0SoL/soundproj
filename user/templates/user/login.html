@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<form method="post">
+    {% csrf_token %}
+    <div class="login-modal">
+        <div class="login-modal-content">
+            <p class="header-text">Sign in or create an account</p>
+            {{ form. }}
+            <div class="load-input">
+                {{ form.username }}
+                <span class="span-text-login">Your username</span>
+            </div>
+            <div class="load-input">
+                {{ form.password }}
+                <span class="span-text-login">Your password</span>
+            </div>
+            <button class="login-button" type="submit">Login</button>
+        </div>
+    </div>
+</form>
+
+<link rel="stylesheet" href="{% static "styles/login.css" %}">
+{% endblock content %}

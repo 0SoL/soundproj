@@ -40,13 +40,28 @@ body {
   align-items: center;
   gap: 16px;
 }
+
 .header-links a {
   color: var(--links-color);
   text-decoration: none;
 }
+
 .header-links a:hover {
   color: var(--text-color);
 }
+
+.logout-button {
+  all: unset;
+  background-color: none;
+  background: none;
+  color: var(--links-color);
+  font-size: 16px;
+}
+
+.logout-button:hover {
+  color: var(--text-color);
+}
+
 footer {
   background: var(--footer-bg);
   color: var(--text-color);
@@ -415,3 +430,4 @@ footer {
 .queue-artist {
   margin: 0;
 }
+

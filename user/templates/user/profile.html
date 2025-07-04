@@ -144,7 +144,7 @@
                 </div>
               </div>
 
-              <div class="waveform" data-src="{{ item.song.audio_file.url }}" id="waveform-{{ forloop.counter }}"></div>
+              <div class="waveform" data-src="{{ item.song.audio_file.url }}" id="waveform-{{ forloop.counter0 }}"></div>
 
             </div>
             {% else %}
@@ -157,6 +157,7 @@
                 {% endif %}
 
                 <button class="play-btn"
+                  data-index="{{ forloop.counter }}"
                   data-src="{{ item.audio_file.url }}" 
                   data-title="{{ item.title }}" 
                   data-artist="{{ item.artist }}"
@@ -204,7 +205,7 @@
                 </div>
               </div>
 
-            <div class="waveform" data-src="{{ item.audio_file.url }}" id="waveform-{{ forloop.counter }}"></div>
+            <div class="waveform" data-src="{{ item.audio_file.url }}" id="waveform-{{ forloop.counter0 }}"></div>
             </div>
             {% endif %}
           </div>
@@ -248,7 +249,6 @@
 
 
 
-<script src="https://unpkg.com/wavesurfer.js"></script>
 <script>
 {% comment %} window.wavesurfers = {};
 
