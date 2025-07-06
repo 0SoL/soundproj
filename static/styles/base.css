@@ -431,3 +431,97 @@ footer {
   margin: 0;
 }
 
+/* LYRIC MODAL  */
+.lyrics-modal {
+  position: fixed;
+  bottom: 100px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #1c1c1c;
+  color: #fff;
+  border-radius: 12px;
+  padding: 20px;
+  max-height: 40vh;
+  overflow-y: auto;
+  z-index: 9999;
+  width: 80%;
+}
+
+.lyrics-modal.hidden {
+  display: none;
+}
+
+.lyrics-content .line {
+  margin: 4px 0;
+  transition: color 0.2s;
+  width: 70%;
+}
+.lyrics-content .active {
+  color: #ff5500;
+  font-weight: bold;
+}
+
+.lyrics-content .line {
+  position: relative;
+  color: #999;
+  font-size: 16px;
+  overflow: hidden;
+}
+
+.lyrics-content .line::before {
+  content: attr(data-text);
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 0%;
+  white-space: nowrap;
+  color: #ff5500;
+  overflow: hidden;
+  animation: none;
+}
+
+.lyrics-content .line.active::before {
+  animation: highlight 2s linear forwards;
+}
+
+@keyframes highlight {
+  from {
+    width: 0%;
+  }
+  to {
+    width: 100%;
+  }
+}
+
+#close-lyrics-btn {
+  position: absolute;
+  right: 20px;
+}
+
+
+.lyrics-modal::-webkit-scrollbar {
+  width: 8px;
+  background: #2e2e2e;
+  border-radius: 10px;
+}
+
+.lyrics-modal::-webkit-scrollbar-track {
+  background: #2e2e2e;
+  border-radius: 10px;
+}
+
+.lyrics-modal::-webkit-scrollbar-thumb {
+  background: #ff5500;
+  border-radius: 10px;
+}
+
+.lyrics-modal::-webkit-scrollbar-thumb:hover {
+  background: #ff7722;
+}
+
+.close-lyrics-button {
+  margin-left: auto;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}

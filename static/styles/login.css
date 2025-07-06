@@ -88,3 +88,17 @@
     border: 1px solid #e5e5e5;
     margin-bottom: 12px;
 }
+
+
+.register-button a {
+    color: #999;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.register-button {
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+    font-size: 14px;
+}
