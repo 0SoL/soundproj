@@ -434,21 +434,24 @@ footer {
 /* LYRIC MODAL  */
 .lyrics-modal {
   position: fixed;
-  bottom: 100px;
+  bottom: 60px;
   left: 50%;
   transform: translateX(-50%);
   background: #1c1c1c;
   color: #fff;
   border-radius: 12px;
   padding: 20px;
-  max-height: 40vh;
-  overflow-y: auto;
   z-index: 9999;
   width: 80%;
+  max-height: 40vh;
 }
 
 .lyrics-modal.hidden {
   display: none;
+}
+
+.lyrics-modal-content {
+  position: relative;
 }
 
 .lyrics-content .line {
@@ -495,33 +498,36 @@ footer {
 
 #close-lyrics-btn {
   position: absolute;
+  top: 10px;
   right: 20px;
+  cursor: pointer;
+  z-index: 10;
 }
 
 
-.lyrics-modal::-webkit-scrollbar {
+.lyrics-content::-webkit-scrollbar {
   width: 8px;
   background: #2e2e2e;
   border-radius: 10px;
 }
 
-.lyrics-modal::-webkit-scrollbar-track {
+.lyrics-content::-webkit-scrollbar-track {
   background: #2e2e2e;
   border-radius: 10px;
 }
 
-.lyrics-modal::-webkit-scrollbar-thumb {
+.lyrics-content::-webkit-scrollbar-thumb {
   background: #ff5500;
   border-radius: 10px;
 }
 
-.lyrics-modal::-webkit-scrollbar-thumb:hover {
+.lyrics-content::-webkit-scrollbar-thumb:hover {
   background: #ff7722;
 }
 
-.close-lyrics-button {
-  margin-left: auto;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
+.lyrics-content {
+  max-height: 40vh;
+  overflow-y: auto;
+  padding-right: 8px;
 }
+
