@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+
+<div class="track-container">
+    <div class="track-content">
+        <div class="track-artwork">
+            {% if song.album.cover %}
+                <img id="cover-img" src="{{ song.album.cover.url }}" alt="Обложка" class='song-cover'>
+            {% else %}
+                <img src="{% static 'images/placeholder.png' %}" alt="Обложка" class='song-cover'>
+            {% endif %}
+        </div>
+        <div class="play-button">
+            <button class="play-btn"
+                  data-src="{{ song.audio_file.url }}" 
+                  data-title="{{ song.title }}" 
+                  data-artist="{{ song.artist }}"
+                  {% if song.album.cover %}
+                      data-cover="{{ song.album.cover.url }}"
+                  {% else %}
+                      data-cover="{% static 'images/placeholder.png' %}"
+                  {% endif %}
+            >
+                <svg viewBox="0 0 24 24" height="32" width='32' xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M20.346 11.58a.5.5 0 0 1 0 .84L7.77 20.506a.5.5 0 0 1-.77-.42V3.914a.5.5 0 0 1 .77-.42l12.576 8.084Z" fill="#ffffff"></path>
+                </svg>
+            </button>
+        </div>
+        <div class="track-info">
+            <p class="title">{{song.title}}</p>
+            <p class="artist">{{song.artist}}</p>
+        </div>
+        <div class="track-date">
+            <p>{{ song.uploaded_at|timesince }} назад</p>
+        </div>
+        <div class="waveform" data-src="{{ song.audio_file.url }}" id="waveform"></div>
+    </div>
+</div>
+
+
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/color-thief/2.3.2/color-thief.umd.js"></script>
+<link rel="stylesheet" href="{% static "styles/song_detail.css" %}">
+<script src="{% static "js/music/song_detail.js" %}"></script>
+{% endblock content %}

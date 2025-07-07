@@ -50,7 +50,9 @@
         <div class='song-wrapper'> 
             <div class='song-card'>
                 {% if spot.album.cover %}
+                  <a href="/music/{{ spot.slug }}/" onclick="loadPage(event, '/music/{{ spot.slug }}/')">
                     <img src="{{ spot.album.cover.url }}" alt="Обложка" class='song-cover'>
+                  </a>
                 {% else %}
                     <img src="{% static 'images/placeholder.png' %}" alt="Обложка" class='song-cover'>
                 {% endif %}
@@ -88,7 +90,9 @@
               <div class='song-wrapper'> 
                 <div class='song-card'>
                 {% if item.song.album.cover %}
-                <img src="{{ item.song.album.cover.url }}" alt="Обложка" class='song-cover'>
+                <a href="/music/{{ item.song.slug }}/" onclick="loadPage(event, '/music/{{ spot.slug }}/')">
+                    <img src="{{ item.song.album.cover.url  }}" alt="Обложка" class='song-cover'>
+                </a>
                 {% else %}
                 <img src="{% static 'images/placeholder.png' %}" alt="Обложка" class='song-cover'>
                 {% endif %}
@@ -151,7 +155,9 @@
               <div class='song-wrapper'> 
                 <div class='song-card'>
                 {% if item.album.cover %}
-                <img src="{{ item.album.cover.url }}" alt="Обложка" class='song-cover'>
+                  <a href="/music/{{ item.slug }}/" onclick="loadPage(event, '/music/{{ item.slug }}/')">
+                      <img src="{{ item.album.cover.url   }}" alt="Обложка" class='song-cover'>
+                  </a>
                 {% else %}
                 <img src="{% static 'images/placeholder.png' %}" alt="Обложка" class='song-cover'>
                 {% endif %}

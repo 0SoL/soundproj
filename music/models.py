@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-
+from django.utils.text import slugify
 
 class Album(models.Model):
     title = models.CharField(max_length=255)
@@ -8,6 +8,9 @@ class Album(models.Model):
     cover = models.ImageField(upload_to='covers/', null=True, blank=True, default="/Users/rustam/Desktop/soundproj/static/images/placeholder.png") 
     created_at = models.DateTimeField(auto_now_add=True)
     uploaded_by = models.ForeignKey(User, on_delete=models.CASCADE)
+    
+    def __str__(self):
+        return f"{self.title} — {self.artist}"
 
 
 class Song(models.Model):
@@ -19,9 +22,15 @@ class Song(models.Model):
     uploaded_by = models.ForeignKey(User, on_delete=models.CASCADE)
     liked_by = models.ManyToManyField(User, related_name='liked_songs', blank=True)
     uploaded_at = models.DateTimeField(auto_now_add=True,null=True, blank=True)
+    slug = models.SlugField(blank=True, null=True)
 
     def __str__(self):
         return f"{self.title} — {self.artist}"
+    
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(f"{self.title}-{self.artist}")
+        super().save(*args, **kwargs)
     
     
 class Repost(models.Model):

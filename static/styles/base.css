@@ -436,19 +436,25 @@ footer {
   position: fixed;
   bottom: 60px;
   left: 50%;
-  transform: translateX(-50%);
-  background: #1c1c1c;
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+  background-color: #121212;
+  border: 1px solid rgba(255, 255, 255, 0.15);
   color: #fff;
   border-radius: 12px;
   padding: 20px;
   z-index: 9999;
   width: 80%;
   max-height: 40vh;
+  transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
-.lyrics-modal.hidden {
-  display: none;
+.lyrics-modal.is-hidden {
+  opacity: 0;
+  transform: translateX(-50%) translateY(10px);
+  pointer-events: none;
 }
+
 
 .lyrics-modal-content {
   position: relative;

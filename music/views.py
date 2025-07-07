@@ -1,4 +1,4 @@
-from django.views.generic import CreateView, ListView
+from django.views.generic import CreateView, ListView, DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import Song, Album
 from .forms import SongUploadForm
@@ -72,3 +72,11 @@ def liked_songs(request):
     songs = request.user.liked_songs.all()
     print(songs)
     return render(request, 'music/liked.html', {'songs': songs, 'page_class': 'no-div3'})
+
+
+class SongDetailView(DetailView):
+    model = Song
+    template_name = "music/song_detail.html"
+    context_object_name = 'song'
+    extra_context = {'page_class': 'no-div3'}
+    

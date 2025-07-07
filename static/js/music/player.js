@@ -20,7 +20,6 @@ function initWaveForm() {
       responsive: true,
       barWidth: 2,
     });
-    console.log("Tut ws",ws)
     ws.load(src);
     window.wavesurfers = window.wavesurfers || {};
     window.wavesurfers[src] = ws;
@@ -48,7 +47,6 @@ document.addEventListener('DOMContentLoaded', initWaveForm)
       artist: btn.dataset.artist,
       cover:  btn.dataset.cover || '/static/images/placeholder.png'
     }));
-    console.log(playlist)
     let currentIndex = 0;
 
     function updateUI(track) {
@@ -205,7 +203,6 @@ document.addEventListener('DOMContentLoaded', initWaveForm)
     let activeIndex = parsedLyrics.findIndex((line, i) =>
       current >= line.time && (i === parsedLyrics.length - 1 || current < parsedLyrics[i + 1].time)
     );
-    console.log(lines)
     lines.forEach((el, i) => {
       const isActive = i === activeIndex;
       el.classList.toggle("active", isActive);
@@ -216,16 +213,16 @@ document.addEventListener('DOMContentLoaded', initWaveForm)
   });
 
   lyricsBtn.addEventListener("click", () => {
-    lyricsModal.classList.toggle("hidden");
+    lyricsModal.classList.toggle("is-hidden");
   });
 
   closeLyricsBtn.addEventListener("click", () => {
-    lyricsModal.classList.add("hidden");
+    lyricsModal.classList.add("is-hidden");
   });
 
   lyricsModal.addEventListener("click", (e) => {
     if (!e.target.closest(".lyrics-modal-content")) {
-      lyricsModal.classList.add("hidden");
+      lyricsModal.classList.add("is-hidden");
     }
   });
 });
@@ -247,6 +244,7 @@ document.addEventListener('DOMContentLoaded', initWaveForm)
         initMusic();  
         initUploadModal();
         initWaveForm();
+        initSongBackground();
       });
   }
 
