@@ -17,6 +17,15 @@ class RegisterView(CreateView):
     form_class = RegisterForm
     template_name = 'user/register.html'
     success_url = reverse_lazy('login')
+
+    def form_valid(self, form):
+        response = super().form_valid(form)  
+        user = self.object 
+        print(user)
+        Profile.objects.create(user=user)  # Теперь создаём профиль
+        return response
+    
+    
     
 
 # Create your views here.

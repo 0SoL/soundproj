@@ -3,8 +3,9 @@
 {% block content %}
 
 <h1>zalupa</h1>
-<form action="">
+<form method="POST">
     {% csrf_token %}
     {{ form.as_p }}
+    <button class="login-button" type="submit">Register</button>
 </form>
 {% endblock content %}

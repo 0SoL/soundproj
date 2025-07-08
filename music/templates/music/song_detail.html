@@ -39,6 +39,59 @@
 </div>
 
 
+<form method="post">
+    {% csrf_token %}
+    <div class="write-comment-section">
+        <div class="user-avatar">
+            {% if user.is_authenticated %}
+                <img src="{{ user.profile.avatar.url }}" alt="Ваш аватар" class="user-avatar">
+            {% endif %}
+        </div>
+        {{ form.text }}
+        <button class="submit-comment-btn">
+            <svg width="24px" height="24px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M21.0808 4.08454c.0817-.26553.0099-.55446-.1865-.7509-.1964-.19644-.4854-.2682-.7509-.1865L1.75863 8.80399c-.2994.09213-.51001.36063-.52817.67336-.01816.31273.15995.60385.44668.72995l8.57186 3.7716 3.7716 8.5719c.1262.2867.4173.4648.73.4467.3127-.0182.5812-.2288.6734-.5282l5.6568-18.38476ZM10.6505 12.5168 4.12458 9.64541 19.2305 4.99743l-4.648 15.10597-2.8714-6.526 3.3496-3.3495L14 9.16725l-3.3495 3.34955Z" fill="#fff"></path></svg>
+        </button>
+    </div>
+</form>
+
+<div class="comment-area-wrapper">
+    <div class="uploaded-by-section">
+        <a href="/user/{{ song.uploaded_by }}/" onclick="loadPage(event, '/user/{{ song.uploaded_by }}/')">
+            <div class="uploaded-by-avatar">
+                <img src="{{ song.uploaded_by.profile.avatar.url }}" alt="">
+            </div>
+            <div class="uploaded-by-username">
+                <p>{{ song.uploaded_by.profile.user.username }}</p>
+            </div>
+        </a>
+    </div>
+
+    <div class="comments-section">
+        <h3>Комментарии</h3>
+        {% for comment in comments %}
+            <div class="comment">
+                <img src="{{ comment.author.profile.avatar.url }}" alt="Аватар">
+                <div class="comment-body">
+                    <div class="comment-header">
+                        <span class="comment-author">
+                            <a href="/user/{{ comment.author.username }}/" onclick="loadPage(event, '/user/{{ comment.author.username }}/')">
+                                {{ comment.author.username }}
+                            </a>
+                        </span>
+                        <span>•</span>
+                        <span class="comment-date">{{ comment.created_at|date:"d M Y H:i" }}</span>
+                    </div>
+                    <div class="comment-content">
+                        <p>{{ comment.text }}</p>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <p>Пока нет комментариев.</p>
+        {% endfor %}
+    </div>
+</div>
+
 
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/color-thief/2.3.2/color-thief.umd.js"></script>

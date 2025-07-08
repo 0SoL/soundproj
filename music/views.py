@@ -1,7 +1,7 @@
 from django.views.generic import CreateView, ListView, DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import Song, Album
-from .forms import SongUploadForm
+from .forms import SongUploadForm, CommentForm
 from django.urls import reverse_lazy
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
@@ -79,4 +79,23 @@ class SongDetailView(DetailView):
     template_name = "music/song_detail.html"
     context_object_name = 'song'
     extra_context = {'page_class': 'no-div3'}
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['comments'] = self.object.comments.all()
+        context['form'] = CommentForm()
+        return context
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.song = self.object
+            comment.author = request.user
+            comment.save()
+            return redirect(self.request.path)
+        context = self.get_context_data()
+        context['form'] = form
+        return self.render_to_response(context)
     

@@ -44,4 +44,16 @@ class Repost(models.Model):
 
     def __str__(self):
         return f"{self.user.username} репостнул {self.song.title}"
-    
+
+
+class Comment(models.Model):
+    song = models.ForeignKey(Song, on_delete=models.CASCADE, related_name='comments')
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    text = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f"Комментарий от {self.author.username} к {self.song.title}"
