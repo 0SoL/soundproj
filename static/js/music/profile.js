@@ -47,7 +47,7 @@ fetch("/user/update-spotlight/", {
     alert(data.error);
     } else {
     alert('Spotlight обновлён!');
-    location.reload(); // или обнови блок без перезагрузки
+    location.reload(); 
     }
 });
 });

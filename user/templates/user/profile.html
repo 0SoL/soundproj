@@ -23,8 +23,10 @@
                 <!-- Кнопка обновления внутри обёртки -->
                 <form method="post" action="{% url 'update_avatar' %}" enctype="multipart/form-data" class="edit-avatar-form">
                     {% csrf_token %}
-                    <label for="avatar-upload" class="edit-avatar-btn">Update image</label>
-                    <input type="file" id="avatar-upload" name="avatar" hidden onchange="this.form.submit()">
+                    {% if profile.user.id == request.user.id %}
+                      <label for="avatar-upload" class="edit-avatar-btn">Update image</label>
+                      <input type="file" id="avatar-upload" name="avatar" hidden onchange="this.form.submit()">
+                    {% endif %}
                 </form>
             </div>
             
@@ -35,8 +37,10 @@
         </div>
         <form method="post" action="{% url 'update_banner' %}" enctype="multipart/form-data" class="edit-banner-form">
             {% csrf_token %}
-            <label for="banner-upload" class="edit-banner-btn">Update image</label>
-            <input type="file" id="banner-upload" name="banner" hidden onchange="this.form.submit()">
+            {% if profile.user.id == request.user.id %}
+              <label for="banner-upload" class="edit-banner-btn">Update image</label>
+              <input type="file" id="banner-upload" name="banner" hidden onchange="this.form.submit()">
+            {% endif %}
         </form>
     </div>
 </div>
@@ -58,6 +62,7 @@
                 {% endif %}
 
                 <button class="play-btn"
+                        data-id="{{ spot.id }}" 
                         data-src="{{ spot.audio_file.url }}" 
                         data-title="{{ spot.title }}" 
                         data-artist="{{ spot.artist }}"
@@ -90,7 +95,7 @@
               <div class='song-wrapper'> 
                 <div class='song-card'>
                 {% if item.song.album.cover %}
-                <a href="/music/{{ item.song.slug }}/" onclick="loadPage(event, '/music/{{ spot.slug }}/')">
+                <a href="/music/{{ item.song.slug }}/" onclick="loadPage(event, '/music/{{ item.song.slug }}/')">
                     <img src="{{ item.song.album.cover.url  }}" alt="Обложка" class='song-cover'>
                 </a>
                 {% else %}
@@ -98,6 +103,7 @@
                 {% endif %}
 
                 <button class="play-btn"
+                  data-id="{{ item.id }}" 
                   data-src="{{ item.song.audio_file.url }}" 
                   data-title="{{ item.song.title }}" 
                   data-artist="{{ item.song.artist }}"
@@ -163,7 +169,7 @@
                 {% endif %}
 
                 <button class="play-btn"
-                  data-index="{{ forloop.counter }}"
+                  data-id="{{ item.id }}" 
                   data-src="{{ item.audio_file.url }}" 
                   data-title="{{ item.title }}" 
                   data-artist="{{ item.artist }}"

@@ -13,6 +13,7 @@
             {% endif %}
 
             <button class="play-btn"
+                    data-id="{{ song.id }}"
                     data-src="{{ song.audio_file.url }}" 
                     data-title="{{ song.title }}" 
                     data-artist="{{ song.artist }}"
