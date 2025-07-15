@@ -1,53 +1,49 @@
 function getCookie(name) {
-  let cookieValue = null;
-  if (document.cookie && document.cookie !== '') {
-    const cookies = document.cookie.split(';');
-    for (let cookie of cookies) {
-      cookie = cookie.trim();
-      if (cookie.startsWith(name + '=')) {
-        cookieValue = decodeURIComponent(cookie.slice(name.length + 1));
-        break;
-      }
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (const cookie of cookies) {
+            if (cookie.trim().startsWith(name + '=')) {
+                cookieValue = decodeURIComponent(cookie.trim().substring(name.length + 1));
+                break;
+            }
+        }
     }
-  }
-  return cookieValue;
+    return cookieValue;
 }
   
 
-const openBtn = document.getElementById('openSpotlightModal');
-const closeBtn = document.getElementById('closeSpotlightModal');
-const modal = document.getElementById('spotlightModal');
-const form = document.getElementById('spotlightForm');
-
-openBtn.addEventListener('click', () => modal.classList.remove('hidden'));
-closeBtn.addEventListener('click', () => modal.classList.add('hidden'));
-
-form.addEventListener('submit', function (e) {
-e.preventDefault();
-const checked = form.querySelectorAll('input[name="song_ids"]:checked');
-if (checked.length > 4) {
-    alert('Выбери не более 4 треков');
-    return;
-}
-
-const data = new FormData();
-checked.forEach(input => data.append('song_ids[]', input.value));
-
-fetch("/user/update-spotlight/", {
+const followBtn = document.getElementById('follow-button');
+console.log(followBtn)
+followBtn.addEventListener('click', function () {
+  const followBtn = document.getElementById('follow-button');
+  const username = followBtn.dataset.username;
+  const btnText = document.querySelector('.button-text')
+  const followersCount = document.querySelector('.followers-count')
+  console.log(followersCount.textContent)
+  fetch('/user/follow', {
     method: 'POST',
     headers: {
-    'X-CSRFToken': getCookie('csrftoken'),
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'X-CSRFToken': getCookie('csrftoken')
     },
-    body: data,
-})
-.then(res => res.json())
-.then(data => {
-    console.log(data)
-    if (data.error) {
-    alert(data.error);
-    } else {
-    alert('Spotlight обновлён!');
-    location.reload(); 
+    body: new URLSearchParams({
+      username: username
+    })
+  })
+  .then(res => res.json())
+  .then(data => {
+    if(data.following) {
+      followBtn.classList.add('followed-button')
+      btnText.textContent = 'Following'
+      followersCount.textContent = parseInt(followersCount.textContent) + 1
     }
-});
+    else {
+      followBtn.classList.remove('followed-button')
+      followBtn.classList.add('follow-button')
+      btnText.textContent = 'Follow'
+      followersCount.textContent = parseInt(followersCount.textContent) - 1
+  }  
+  })
+  .catch(console.error);
 });

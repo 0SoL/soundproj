@@ -6,12 +6,13 @@ from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import TemplateView
 from django.shortcuts import get_object_or_404
-from .models import Profile
+from .models import Profile, Follow
 from django.contrib.auth.models import User
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 from django.contrib.auth.decorators import login_required
 from music.models import Song, Repost
+
 
 class RegisterView(CreateView):
     form_class = RegisterForm
@@ -40,6 +41,13 @@ class UserProfileView(TemplateView):
         user = get_object_or_404(User, username=username)
         profile = get_object_or_404(Profile, user=user)
         
+        followers_count = Follow.objects.filter(followed=profile).count()
+        following_count = Follow.objects.filter(follower=profile).count()
+        tracks_count = Song.objects.filter(uploaded_by=profile.user).count()
+
+        context['followers_count'] = followers_count
+        context['following_count'] = following_count
+        context['tracks_count'] = tracks_count
         context['profile'] = profile
         context['is_owner'] = (user == self.request.user)
         
@@ -50,11 +58,11 @@ class UserProfileView(TemplateView):
             key=lambda x: x.timestamp if hasattr(x, 'timestamp') else x.uploaded_at,
             reverse=True
         )
-
+        print(user.liked_songs.all(), 'zalupa')
+        
         if user == self.request.user:
             context['liked_songs'] = user.liked_songs.all()
             context['recent_activity'] = recent
-        print(recent)
         return context
 
 
@@ -82,3 +90,21 @@ def update_spotlight(request):
     songs = Song.objects.filter(id__in=ids, liked_by=request.user)
     request.user.profile.spotlight_songs.set(songs)
     return JsonResponse({'message': 'Spotlight обновлён!'})
+
+
+@require_POST
+@login_required
+def toggle_follow(request):
+    username = request.POST.get('username')
+    current_profile = request.user.profile
+    target_user = get_object_or_404(User, username=username)
+
+
+    if target_user in current_profile.following.all():
+        current_profile.following.remove(target_user)
+        following = False
+    else:
+        current_profile.following.add(target_user)
+        following = True
+
+    return JsonResponse({"following": following})

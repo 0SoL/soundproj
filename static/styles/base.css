@@ -537,3 +537,5 @@ footer {
   padding-right: 8px;
 }
 
+.is-fading-out { opacity: 0; transition: opacity 0.2s; }
+.is-fading-in  { opacity: 1; }

@@ -2,14 +2,22 @@
 const audioForWavefrom = document.getElementById('player');
 window.currentWs = null;
 function initWaveForm() {
+  const audio = document.getElementById('player');
   const waveformElements = document.querySelectorAll('.waveform');
 
-  if (waveformElements.length === 0) return;
+  if (!audio || waveformElements.length === 0) return;
 
-  const audio = document.getElementById('player');
+  window.wavesurfers = window.wavesurfers || {};
 
-  waveformElements.forEach((el) => {
+  waveformElements.forEach(el => {
     const src = el.dataset.src;
+    if (!src) return;
+
+    // Удаляем старый WaveSurfer, если есть
+    if (window.wavesurfers[src]) {
+      window.wavesurfers[src].destroy();
+      delete window.wavesurfers[src];
+    }
 
     const ws = WaveSurfer.create({
       container: el,
@@ -21,12 +29,12 @@ function initWaveForm() {
       responsive: true,
       barWidth: 2,
     });
+
     ws.load(src);
-    window.wavesurfers = window.wavesurfers || {};
     window.wavesurfers[src] = ws;
   });
 }
-
+// document.addEventListener('DOMContentLoaded', initWaveForm)
 
 // Функция для изменения иконки плей/пауз
 function ctrlIconChange() {
@@ -46,142 +54,142 @@ window.currentTrackId = null;
 window.playlist = [];
 window.isPlaying = false;
 
+function initMusic() {
+  // Создаем переменные
+  const audio = document.getElementById('player');
+  const ctrlIcon = document.getElementById('ctrlIcon');
+  const coverImg = document.getElementById('now-playing-cover');
+  const titleEl = document.getElementById('now-playing');
+  const artistEl = document.getElementById('now-playing-artist');
+  const queueListEl = document.querySelector('.queue-list');
+  const playButtons = Array.from(document.querySelectorAll('.play-btn'));
 
-document.addEventListener('DOMContentLoaded', initWaveForm)
-  function initMusic() {
-    // Создаем переменные
-    const audio = document.getElementById('player');
-    const ctrlIcon = document.getElementById('ctrlIcon');
-    const coverImg = document.getElementById('now-playing-cover');
-    const titleEl = document.getElementById('now-playing');
-    const artistEl = document.getElementById('now-playing-artist');
-    const queueListEl = document.querySelector('.queue-list');
-    const playButtons = Array.from(document.querySelectorAll('.play-btn'));
+  // Если кнопок нет, или аудио нету то заканчиваем функцию
+  if (!audio || playButtons.length === 0) return;
 
-    // Если кнопок нет, или аудио нету то заканчиваем функцию
-    if (!audio || playButtons.length === 0) return;
+  // собираем плейлист
+  if (window.playlist.length === 0) {
+    window.playlist = playButtons.map(btn => ({
+      id: btn.dataset.id,
+      url: btn.dataset.src,
+      title: btn.dataset.title,
+      artist: btn.dataset.artist,
+      cover: btn.dataset.cover || '/static/images/placeholder.png'
+    }));
+  }
 
-    // собираем плейлист
-    if (window.playlist.length === 0) {
-      window.playlist = playButtons.map(btn => ({
-        id: btn.dataset.id,
-        url: btn.dataset.src,
-        title: btn.dataset.title,
-        artist: btn.dataset.artist,
-        cover: btn.dataset.cover || '/static/images/placeholder.png'
-      }));
-    }
-    let currentIndex = 0;
-
-    // Вставляет инфу о треке в плеер снизу-справа
-    function updateUI(track) {
-      titleEl.textContent    = track.title;
-      artistEl.textContent   = track.artist;
-      coverImg.src           = track.cover;
-      // ставим иконку паузы
-      ctrlIcon.innerHTML     = '<path d="M200,32H160a16,16,0,0,0-16,16V208a16,16,0,0,0,16,16h40a16,16,0,0,0,16-16V48A16,16,0,0,0,200,32Zm0,176H160V48h40ZM96,32H56A16,16,0,0,0,40,48V208a16,16,0,0,0,16,16H96a16,16,0,0,0,16-16V48A16,16,0,0,0,96,32Zm0,176H56V48H96Z">';
-      ctrlIcon.classList.remove('play');
-      ctrlIcon.classList.add('pause');
-    }
+  // Вставляет инфу о треке в плеер снизу-справа
+  function updateUI(track) {
+    titleEl.textContent    = track.title;
+    artistEl.textContent   = track.artist;
+    coverImg.src           = track.cover;
+    // ставим иконку паузы
+    ctrlIcon.innerHTML     = '<path d="M200,32H160a16,16,0,0,0-16,16V208a16,16,0,0,0,16,16h40a16,16,0,0,0,16-16V48A16,16,0,0,0,200,32Zm0,176H160V48h40ZM96,32H56A16,16,0,0,0,40,48V208a16,16,0,0,0,16,16H96a16,16,0,0,0,16-16V48A16,16,0,0,0,96,32Zm0,176H56V48H96Z">';
+    ctrlIcon.classList.remove('play');
+    ctrlIcon.classList.add('pause');
+  }
 
 
-    // Функция для прогрузки элементов в nextup(след.трек модалке)
-    function updateQueueUI(pl, idx) {
-      queueListEl.innerHTML = '';
-      pl.slice(idx + 1).forEach((track, i) => {
-        const el = document.createElement('div');
-        el.className = 'queue-track';
-        el.innerHTML = `
-          <img src="${track.cover}" class="queue-cover" />
-          <div class="queue-info">
-            <p class="queue-artist">${track.artist}</p>
-            <p class="queue-title">${track.title}</p>
-          </div>`;
-        el.addEventListener('click', () => playTrack(idx + 1 + i));
-        queueListEl.appendChild(el);
-      });
-    }
-
-    function updateIconsById(isPlaying) {
-    document.querySelectorAll('.play-btn').forEach(btn => {
-      btn.innerHTML = (
-        Number(btn.dataset.id) === Number(window.currentTrackId) && isPlaying
-      ) ? "⏸︎" : "▶";
+  // Функция для прогрузки элементов в nextup(след.трек модалке)
+  function updateQueueUI(pl, idx) {
+    queueListEl.innerHTML = '';
+    pl.slice(idx + 1).forEach((track, i) => {
+      const el = document.createElement('div');
+      el.className = 'queue-track';
+      el.innerHTML = `
+        <img src="${track.cover}" class="queue-cover" />
+        <div class="queue-info">
+          <p class="queue-artist">${track.artist}</p>
+          <p class="queue-title">${track.title}</p>
+        </div>`;
+      el.addEventListener('click', () => playTrack(idx + 1 + i));
+      queueListEl.appendChild(el);
     });
   }
 
-    // Функция для иницизалиции запуска треков 
-    function playTrack(i) {
-      const audio = document.getElementById('player');
-      const track = window.playlist[i];
+  function updateIconsById(isPlaying) {
+  document.querySelectorAll('.play-btn').forEach(btn => {
+    btn.innerHTML = (
+      Number(btn.dataset.id) === Number(window.currentTrackId) && isPlaying
+    ) ? "⏸︎" : "▶";
+  });
+}
 
-      if (window.currentTrackId === track.id) {
-        if (audio.paused) {
-          audio.play();
-          window.isPlaying = true;
-        } else {
-          audio.pause();
-          window.isPlaying = false;
-        }
-        updateIconsById(window.isPlaying);
-        return;
-      }
+  // Функция для иницизалиции запуска треков 
+  function playTrack(i) {
+    const track = window.playlist[i];
+    if (!track) return;
 
-      audio.src = track.url;
-      updateUI(track);
-      updateQueueUI(playlist, i);
-      audio.play();
-
-      window.currentTrackId = track.id;
-      window.currentTrackIndex = i;
-      window.isPlaying = true;
-      updateIconsById(true);
-    };
-
-    playButtons.forEach(btn => {
-      const id = btn.dataset.id;
-      btn.addEventListener('click', () => {
-        const index = window.playlist.findIndex(track => track.id === id);
-        if (index !== -1) playTrack(index);
-      });
-    });
-
-    // if (window.isPlaying && window.currentTrackId !== null) {
-    //   playButtons[window.currentTrackIndex].innerHTML = "⏸︎";
-    // }
-
-    // автопереход
-    audio.addEventListener('ended', () => {
-      if (window.currentTrackIndex < playlist.length - 1) {
-        playTrack(window.currentTrackIndex + 1);
+    if (window.currentTrackId === track.id) {
+      if (audio.paused) {
+        audio.play();
+        window.isPlaying = true;
       } else {
-        // плейлист кончился — иконка «play»
-        ctrlIcon.classList.remove('pause');
-        ctrlIcon.classList.add('play');
-        ctrlIcon.innerHTML = `<path d="M232.4,114.49,88.32,26.35a16,16,0,0,0-16.2-.3A15.86,15.86,0,0,0,64,39.87V216.13A15.94,15.94,0,0,0,80,232a16.07,16.07,0,0,0,8.36-2.35L232.4,141.51a15.81,15.81,0,0,0,0-27ZM80,215.94V40l143.83,88Z"/>`;
+        audio.pause();
+        window.isPlaying = false;
       }
-    });
+      updateIconsById(window.isPlaying);
+      return;
+    }
 
-    // prev / next — опционально, если у вас есть такие кнопки
-    document.getElementById('prev-track')?.addEventListener('click', () => {
-      if (currentIndex === 0 || audio.currentTime > 5) {
-        playTrack(currentIndex);
-      } else {
-        playTrack(currentIndex - 1);
-      }
-    });
-    document.getElementById('next-track')?.addEventListener('click', () => {
-      if (currentIndex < playlist.length - 1) {
-        playTrack(currentIndex + 1);
-      }
-    });
+    audio.src = track.url;
+    updateUI(track);
+    updateQueueUI(window.playlist, i);
+    audio.play();
+
+    window.currentTrackId = track.id;
+    window.currentTrackIndex = i;
+    window.isPlaying = true;
+    updateIconsById(true);
   }
+
+  playButtons.forEach(btn => {
+    if (btn.dataset.listenerAttached) return;
+
+    const id = btn.dataset.id;
+    btn.addEventListener('click', () => {
+      const index = window.playlist.findIndex(track => track.id === id);
+      if (index !== -1) playTrack(index);
+    });
+    btn.dataset.listenerAttached = 'true';
+  });
+
+  // if (window.isPlaying && window.currentTrackId !== null) {
+  //   playButtons[window.currentTrackIndex].innerHTML = "⏸︎";
+  // }
+
+  // автопереход
+  audio.addEventListener('ended', () => {
+    if (window.currentTrackIndex < playlist.length - 1) {
+      playTrack(window.currentTrackIndex + 1);
+    } else {
+      // плейлист кончился — иконка «play»
+      ctrlIcon.classList.remove('pause');
+      ctrlIcon.classList.add('play');
+      ctrlIcon.innerHTML = `<path d="M232.4,114.49,88.32,26.35a16,16,0,0,0-16.2-.3A15.86,15.86,0,0,0,64,39.87V216.13A15.94,15.94,0,0,0,80,232a16.07,16.07,0,0,0,8.36-2.35L232.4,141.51a15.81,15.81,0,0,0,0-27ZM80,215.94V40l143.83,88Z"/>`;
+    }
+  });
+
+  // prev / next — опционально, если у вас есть такие кнопки
+  document.getElementById('prev-track')?.addEventListener('click', () => {
+    if (currentIndex === 0 || audio.currentTime > 5) {
+      playTrack(currentIndex);
+    } else {
+      playTrack(currentIndex - 1);
+    }
+  });
+  document.getElementById('next-track')?.addEventListener('click', () => {
+    if (currentIndex < playlist.length - 1) {
+      playTrack(currentIndex + 1);
+    }
+  });
+}
 
 // Функция для иницилизации музыки
-document.addEventListener('DOMContentLoaded', function () {
-  console.log('DOMContentLoaded'); 
-  initMusic();
-});
+// document.addEventListener('DOMContentLoaded', function () {
+//   console.log('DOMContentLoaded'); 
+//   initMusic();
+// });
 
 // Функция для вывода текста и подкраски его 
 document.addEventListener("DOMContentLoaded", () => {
@@ -293,29 +301,7 @@ lyricsModal.addEventListener("click", (e) => {
 });
 
 // Функция для предгрузки страницы
-function loadPage(event, url) {
-  event?.preventDefault();
-  fetch(url)
-    .then(res => res.text())
-    .then(html => {
-      const doc     = new DOMParser().parseFromString(html, 'text/html');
-      const content = doc.getElementById('main-content');
 
-      document.getElementById('main-content').innerHTML = content.innerHTML;
-      document.body.className                          = doc.body.className;
-      document.querySelector('.parent').className      = doc.querySelector('.parent').className;
-      window.history.pushState({}, '', url);
-
-      initMusic();  
-      initUploadModal();
-      initWaveForm();
-      initSongBackground();
-    });
-}
-
-window.addEventListener('popstate', () =>
-  loadPage(null, location.pathname)
-);
 
 
 // Фукнция для лайка трека 
@@ -396,7 +382,6 @@ if (ctrlIcon.classList.contains('play')) {
 };
 
 // Функция отвечает за то что при нажатии на слайдере меняется куренттайм песни и начинается оттуда 
-
 progress.onchange = function() {
     song.play();
     song.currentTime = progress.value;
@@ -421,7 +406,6 @@ song.addEventListener('timeupdate', () => {
 });
 
 // Функции для смены иконки звука в зависимости от громкости 
-
 let volumeSlider = document.querySelector('.volume-slider');
 let volumeIcon = document.querySelector('.volume');
 
@@ -447,7 +431,6 @@ volumeSlider.addEventListener('input', function () {
 })
 
 // Управление звуком audio
-
 let lastVolume = 0;
 let isMuted = false;
 
@@ -480,9 +463,7 @@ volumeIcon.addEventListener('click' , function () {
 
 })
 
-
 // Кажется это слайдер для песни 
-
 const musicSlider = document.querySelector('.music-slider');
 
 song.addEventListener('timeupdate', function () {
@@ -511,4 +492,46 @@ nextUpModal.addEventListener("click", function (event) {
   if (!nextModalContent.contains(event.target)) {
     this.classList.remove('show');
   }
+});
+
+function initApp() {
+  try { initMusic(); } catch (e) { console.error("initMusic", e); }
+  try { initWaveForm(); } catch (e) { console.error("initWaveForm", e); }
+  try { initSongBackground(); } catch (e) {}
+  try { initUploadModal(); } catch (e) {}
+  // и любые другие инициализации
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  initApp(); // нужна при прямом заходе, иначе не будет waveform
+});
+
+barba.init({
+  transitions: [{
+    name: 'default',
+    leave(data) {
+      return new Promise(resolve => {
+        data.current.container.classList.add('is-fading-out');
+        setTimeout(resolve, 200);
+      });
+    },
+    enter(data) {
+      data.next.container.classList.add('is-fading-in');
+      console.log('barba enter: ', data);
+      console.log('namespace:', data.next.namespace);
+    },
+    afterEnter(data) {
+      try { initWaveForm(); } catch (e) {}
+      try { initMusic(); } catch (e) {}
+      try { initSongBackground(); } catch (e) {}
+      try { initUploadModal(); } catch (e) {}
+
+      const newClass = data.next.container.dataset.pageClass || '';
+      document.body.className = newClass;
+      document.querySelector('.parent').className = 'parent ' + newClass;
+      console.log('Barba leave', data)
+       console.log('Barba enter', data) 
+      // updateIconsById(window.isPlaying);
+    }
+  }]
 });

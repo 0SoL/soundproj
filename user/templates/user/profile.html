@@ -3,7 +3,6 @@
 {% load classname %}
 {% load l10n %}
 {% block content %}
-
 <div class="profile-banner">
     {% if profile.banner %}
         <img src="{{ profile.banner.url }}" alt="Обложка" class="banner-img">
@@ -44,188 +43,270 @@
         </form>
     </div>
 </div>
-<div class="spotlight-section">
-    <div class="spotlight-header">
-        <p class="spotlight-text">Spotlight</p>
-        <button id="openSpotlightModal">Edit Spotlight</button>
-    </div>
-    <div class='song-container'>
-    {% for spot in profile.spotlight_songs.all %}
-        <div class='song-wrapper'> 
-            <div class='song-card'>
-                {% if spot.album.cover %}
-                  <a href="/music/{{ spot.slug }}/" onclick="loadPage(event, '/music/{{ spot.slug }}/')">
-                    <img src="{{ spot.album.cover.url }}" alt="Обложка" class='song-cover'>
-                  </a>
-                {% else %}
-                    <img src="{% static 'images/placeholder.png' %}" alt="Обложка" class='song-cover'>
-                {% endif %}
 
-                <button class="play-btn"
-                        data-id="{{ spot.id }}" 
-                        data-src="{{ spot.audio_file.url }}" 
-                        data-title="{{ spot.title }}" 
-                        data-artist="{{ spot.artist }}"
-                        {% if spot.album.cover %}
-                            data-cover="{{ spot.album.cover.url }}"
-                        {% else %}
-                            data-cover="{% static 'images/placeholder.png' %}"
-                        {% endif %}
-                        >▶</button>
-                <button class="like-btn" data-id="{{ spot.id }}">
-                    <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                        <path d="M7.978 5c.653-1.334 1.644-2 2.972-2 1.992 0 3.405 1.657 2.971 4-.289 1.561-2.27 3.895-5.943 7C4.19 10.895 2.21 8.561 2.035 7c-.26-2.343.947-4 2.972-4 1.35 0 2.34.666 2.971 2z" fill="currentColor"></path>
-                    </svg>
-                </button>
-            </div>
-
-            <p class='song-title'><i class="fa-solid fa-heart"></i>{{ spot.title }}</p>
-            <p class='song-artist'>{{ spot.artist }}</p>
+<div class="profile-main-content">
+  <div class="left-column">
+    <div class="spotlight-section">
+        <div class="spotlight-header">
+            <p class="spotlight-text">Spotlight</p>
+            <button id="openSpotlightModal">Edit Spotlight</button>
         </div>
-    {% endfor %}
+        <div class='spotlight-row'>
+          <div class='song-container'>
+            {% for spot in profile.spotlight_songs.all %}
+                <div class='song-wrapper-spotlight'> 
+                    <div class='song-card-spotlight'>
+                        {% if spot.album.cover %}
+                          <a href="/music/{{ spot.slug }}/">
+                            <img src="{{ spot.album.cover.url }}" alt="Обложка" class='song-cover'>
+                          </a>
+                        {% else %}
+                            <img src="{% static 'images/placeholder.png' %}" alt="Обложка" class='song-cover'>
+                        {% endif %}
+
+                        <button class="play-btn"
+                                data-id="{{ spot.id }}" 
+                                data-src="{{ spot.audio_file.url }}" 
+                                data-title="{{ spot.title }}" 
+                                data-artist="{{ spot.artist }}"
+                                {% if spot.album.cover %}
+                                    data-cover="{{ spot.album.cover.url }}"
+                                {% else %}
+                                    data-cover="{% static 'images/placeholder.png' %}"
+                                {% endif %}
+                                >▶</button>
+                        <button class="like-btn" data-id="{{ spot.id }}">
+                            <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                <path d="M7.978 5c.653-1.334 1.644-2 2.972-2 1.992 0 3.405 1.657 2.971 4-.289 1.561-2.27 3.895-5.943 7C4.19 10.895 2.21 8.561 2.035 7c-.26-2.343.947-4 2.972-4 1.35 0 2.34.666 2.971 2z" fill="currentColor"></path>
+                            </svg>
+                        </button>
+                    </div>
+
+                    <p class='song-title'><i class="fa-solid fa-heart"></i>{{ spot.title }}</p>
+                    <p class='song-artist'>{{ spot.artist }}</p>
+                </div>
+            {% endfor %}
+          </div>
+        </div>
     </div>
-</div>
-<div class="recent-section">
-  <div class="recent-header">
-    <p class="recent-text">Recent</p>
-      <div class="recent-content">
-        {% for item in recent_activity %}
-          <div class="recent-object">
-            {% if item|get_class == "Repost" %}
-              <div class='song-wrapper'> 
-                <div class='song-card'>
-                {% if item.song.album.cover %}
-                <a href="/music/{{ item.song.slug }}/" onclick="loadPage(event, '/music/{{ item.song.slug }}/')">
-                    <img src="{{ item.song.album.cover.url  }}" alt="Обложка" class='song-cover'>
+
+    <div class="recent-section">
+      <div class="recent-header">
+        <p class="recent-text">Recent</p>
+          <div class="recent-content">
+            {% for item in recent_activity %}
+              <div class="recent-object">
+                {% if item|get_class == "Repost" %}
+                  <div class='song-wrapper'> 
+                    <div class='song-card'>
+                    {% if item.song.album.cover %}
+                    <a href="/music/{{ item.song.slug }}/">
+                        <img src="{{ item.song.album.cover.url  }}" alt="Обложка" class='song-cover'>
+                    </a>
+                    {% else %}
+                    <img src="{% static 'images/placeholder.png' %}" alt="Обложка" class='song-cover'>
+                    {% endif %}
+
+                    <button class="play-btn"
+                      data-id="{{ item.id }}" 
+                      data-src="{{ item.song.audio_file.url }}" 
+                      data-title="{{ item.song.title }}" 
+                      data-artist="{{ item.song.artist }}"
+                      {% if item.song.album.cover %}
+                          data-cover="{{ item.song.album.cover.url }}"
+                      {% else %}
+                          data-cover="{% static 'images/placeholder.png' %}"
+                      {% endif %}
+                      >▶</button>
+                    <button class="like-btn" data-id="{{ item.song.id }}">
+                    <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                      <path d="M7.978 5c.653-1.334 1.644-2 2.972-2 1.992 0 3.405 1.657 2.971 4-.289 1.561-2.27 3.895-5.943 7C4.19 10.895 2.21 8.561 2.035 7c-.26-2.343.947-4 2.972-4 1.35 0 2.34.666 2.971 2z" fill="currentColor"></path>
+                    </svg>
+                    </button>
+                    </div>
+                  </div>
+                <div class="repost-line">
+                  <div class="repost-top">
+                    <div class="repost-info">
+                      <a href="/user/{{ item.song.uploaded_by.username }}/" onclick="loadPage(event, '/user/{{ item.song.uploaded_by.username }}/')">
+                        {{ item.song.uploaded_by }}
+                      </a>
+                      <svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                        <path d="M7.08034 5.71966L4.05001 2.68933L1.01968 5.71966L2.08034 6.78032L3.30002 5.56065V9.75C3.30002 11.2688 4.53124 12.5 6.05002 12.5H8.05002V11H6.05002C5.35966 11 4.80002 10.4404 4.80002 9.75V5.56066L6.01968 6.78032L7.08034 5.71966Z" fill="currentColor"></path>
+                        <path d="M11.95 13.3107L8.91969 10.2803L9.98035 9.21968L11.2 10.4393L11.2 5.75C11.2 5.05964 10.6404 4.5 9.95001 4.5L7.95001 4.5L7.95001 3L9.95001 3C11.4688 3 12.7 4.23122 12.7 5.75L12.7 10.4394L13.9197 9.21968L14.9803 10.2803L11.95 13.3107Z" fill="currentColor"></path>
+                      </svg>
+                      <a href="/user/{{ profile.user.username }}/" onclick="loadPage(event, '/user/{{ profile.user.username }}/')">
+                        {{ profile.user.username }}
+                      </a>
+                    </div>
+
+                    <div class="repost-timestamp">
+                      <p>{{ item.timestamp|timesince }} назад</p>
+                    </div>
+                    
+                  </div>
+                  <div class="repost-title-genre">
+                    <div class="repost-item-title">
+                      <p class="item-title">{{item.song.title}}</p>
+                    </div>
+                    <div class="repost-item-genre">
+                      <div class="genre-container">
+                        <a href="" class="genre-box">
+                          <span># {{item.song.genre}}</span>
+                        </a>
+                        
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="waveform" data-src="{{ item.song.audio_file.url }}" id="waveform-{{ forloop.counter0 }}"></div>
+
+                </div>
+                {% else %}
+                  <div class='song-wrapper'> 
+                    <div class='song-card'>
+                    {% if item.album.cover %}
+                      <a href="/music/{{ item.slug }}/" onclick="loadPage(event, '/music/{{ item.slug }}/')">
+                          <img src="{{ item.album.cover.url   }}" alt="Обложка" class='song-cover'>
+                      </a>
+                    {% else %}
+                    <img src="{% static 'images/placeholder.png' %}" alt="Обложка" class='song-cover'>
+                    {% endif %}
+
+                    <button class="play-btn"
+                      data-id="{{ item.id }}" 
+                      data-src="{{ item.audio_file.url }}" 
+                      data-title="{{ item.title }}" 
+                      data-artist="{{ item.artist }}"
+                      {% if item.album.cover %}
+                          data-cover="{{ item.album.cover.url }}"
+                      {% else %}
+                          data-cover="{% static 'images/placeholder.png' %}"
+                      {% endif %}
+                      >▶</button>
+                    <button class="like-btn" data-id="{{ item.id }}">
+                    <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                      <path d="M7.978 5c.653-1.334 1.644-2 2.972-2 1.992 0 3.405 1.657 2.971 4-.289 1.561-2.27 3.895-5.943 7C4.19 10.895 2.21 8.561 2.035 7c-.26-2.343.947-4 2.972-4 1.35 0 2.34.666 2.971 2z" fill="currentColor"></path>
+                    </svg>
+                    </button>
+                    </div>
+                  </div>
+                
+                <div class="repost-line">
+                  <div class="repost-top">
+                    <div class="repost-info">
+                      <a href="/user/{{ item.uploaded_by.username }}/" onclick="loadPage(event, '/user/{{ item.uploaded_by.username }}/')">
+                        {{ item.song.uploaded_by }}
+                      </a>
+                      <a href="/user/{{ profile.user.username }}/" onclick="loadPage(event, '/user/{{ profile.user.username }}/')">
+                        {{ profile.user.username }}
+                      </a>
+                    </div>
+
+                    <div class="repost-timestamp">
+                      <p>{{ item.uploaded_at|timesince }} назад</p>
+                    </div>
+                    
+                  </div>
+                  <div class="repost-title-genre">
+                    <div class="repost-item-title">
+                      <p class="item-title">{{item.title}}</p>
+                    </div>
+                    <div class="repost-item-genre">
+                      <div class="genre-container">
+                        <a href="" class="genre-box">
+                          <span># {{item.genre}}</span>
+                        </a>
+                        
+                      </div>
+                    </div>
+                  </div>
+
+                <div class="waveform" data-src="{{ item.audio_file.url }}" id="waveform-{{ forloop.counter0 }}"></div>
+                </div>
+                {% endif %}
+              </div>
+            {% endfor %}
+          </div>
+      </div>
+    </div>
+  </div>
+  <div class="right-column">
+    <div class="follow-section">
+      <div class="follow-header">
+        {% if profile.user != request.user %}
+          {% if profile.user in user.profile.following.all %}
+            <button class="followed-button" id="follow-button" data-username="{{ profile.user.username }}">
+              <div class="button-icon">
+                <svg viewBox="0 0 16 16" height="16px" width='16px' xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M10 4.5C10 6.15685 8.65685 7.5 7 7.5C5.34315 7.5 4 6.15685 4 4.5C4 2.84315 5.34315 1.5 7 1.5C8.65685 1.5 10 2.84315 10 4.5Z" fill="currentColor"></path><path d="M6.99998 8.5C1.98432 8.5 1.03552 10.0048 1.00098 14.248C0.999861 14.3861 1.11191 14.5 1.24998 14.5H12.75C12.8881 14.5 13.0001 14.3861 12.999 14.248C12.9646 9.987 12.016 8.5 6.99998 8.5Z" fill="currentColor"></path><path d="M14.4697 4.46967L12.5 6.43934L11.5303 5.46967L10.4697 6.53033L12.5 8.56066L15.5303 5.53033L14.4697 4.46967Z" fill="currentColor"></path></svg>
+              </div>
+              <span class="button-text">Following</span>
+            </button>
+          {% else %}
+            <button class="follow-button" id="follow-button" data-username="{{ profile.user.username }}">
+              <div class="button-icon">
+                <svg viewBox="0 0 16 16" height="16px" width='16px' xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M10 4.5C10 6.15685 8.65685 7.5 7 7.5C5.34315 7.5 4 6.15685 4 4.5C4 2.84315 5.34315 1.5 7 1.5C8.65685 1.5 10 2.84315 10 4.5Z" fill="currentColor"></path><path d="M6.99998 8.5C1.98432 8.5 1.03552 10.0048 1.00098 14.248C0.999861 14.3861 1.11191 14.5 1.24998 14.5H12.75C12.8881 14.5 13.0001 14.3861 12.999 14.248C12.9646 9.987 12.016 8.5 6.99998 8.5Z" fill="currentColor"></path><path d="M14.4697 4.46967L12.5 6.43934L11.5303 5.46967L10.4697 6.53033L12.5 8.56066L15.5303 5.53033L14.4697 4.46967Z" fill="currentColor"></path></svg>
+              </div>
+              <span class="button-text">Follow</span>
+            </button>
+          {% endif %}
+        {% endif %}
+        <button class="share-button">
+          <div class="button-icon">
+            <svg viewBox="0 0 16 16" height="16px" width='16px'  xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M8 .94l3.03 3.03-1.06 1.06-1.22-1.22V10h-1.5V3.81L6.03 5.03 4.97 3.97 8 .94z" fill="currentColor"></path><path d="M3.25 6v6c0 .69.56 1.25 1.25 1.25h7c.69 0 1.25-.56 1.25-1.25V6h1.5v6a2.75 2.75 0 01-2.75 2.75h-7A2.75 2.75 0 011.75 12V6h1.5z" fill="currentColor"></path></svg>
+          </div>
+          Share
+        </button>
+      </div>
+
+      <div class="follow-main">
+        <div class="follow-types">
+          <p>Followers</p>
+          <p>Following</p>
+          <p>Tracks</p>
+        </div>
+        <div class="follow-values">
+          <span class="followers-count">{{ profile.user.followers.count }}</span>
+          <span>{{ profile.following.count }}</span>
+          <span>{{ tracks_count }}</span>
+        </div>
+      </div>
+      
+    </div>
+    <div class="liked-section">
+      <p class="liked-title">{{liked_songs|length}} Likes</p>
+        {% for song in liked_songs|slice:":3" %}
+          <div class="liked-song-item">
+            <div class="liked-song-cover">
+              {% if song.album.cover %}
+                <a href="/music/{{ song.slug }}/" onclick="loadPage(event, '/music/{{ song.slug }}/')">
+                  <img src="{{ song.album.cover.url }}" alt="Обложка" class="song-cover">
                 </a>
-                {% else %}
-                <img src="{% static 'images/placeholder.png' %}" alt="Обложка" class='song-cover'>
-                {% endif %}
-
-                <button class="play-btn"
-                  data-id="{{ item.id }}" 
-                  data-src="{{ item.song.audio_file.url }}" 
-                  data-title="{{ item.song.title }}" 
-                  data-artist="{{ item.song.artist }}"
-                  {% if item.song.album.cover %}
-                      data-cover="{{ item.song.album.cover.url }}"
-                  {% else %}
-                      data-cover="{% static 'images/placeholder.png' %}"
-                  {% endif %}
-                  >▶</button>
-                <button class="like-btn" data-id="{{ item.song.id }}">
-                <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                  <path d="M7.978 5c.653-1.334 1.644-2 2.972-2 1.992 0 3.405 1.657 2.971 4-.289 1.561-2.27 3.895-5.943 7C4.19 10.895 2.21 8.561 2.035 7c-.26-2.343.947-4 2.972-4 1.35 0 2.34.666 2.971 2z" fill="currentColor"></path>
-                </svg>
-                </button>
-                </div>
-              </div>
-            <div class="repost-line">
-              <div class="repost-top">
-                <div class="repost-info">
-                  <a href="/user/{{ item.song.uploaded_by.username }}/" onclick="loadPage(event, '/user/{{ item.song.uploaded_by.username }}/')">
-                    {{ item.song.uploaded_by }}
-                  </a>
-                  <svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                    <path d="M7.08034 5.71966L4.05001 2.68933L1.01968 5.71966L2.08034 6.78032L3.30002 5.56065V9.75C3.30002 11.2688 4.53124 12.5 6.05002 12.5H8.05002V11H6.05002C5.35966 11 4.80002 10.4404 4.80002 9.75V5.56066L6.01968 6.78032L7.08034 5.71966Z" fill="currentColor"></path>
-                    <path d="M11.95 13.3107L8.91969 10.2803L9.98035 9.21968L11.2 10.4393L11.2 5.75C11.2 5.05964 10.6404 4.5 9.95001 4.5L7.95001 4.5L7.95001 3L9.95001 3C11.4688 3 12.7 4.23122 12.7 5.75L12.7 10.4394L13.9197 9.21968L14.9803 10.2803L11.95 13.3107Z" fill="currentColor"></path>
-                  </svg>
-                  <a href="/user/{{ profile.user.username }}/" onclick="loadPage(event, '/user/{{ profile.user.username }}/')">
-                    {{ profile.user.username }}
-                  </a>
-                </div>
-
-                <div class="repost-timestamp">
-                  <p>{{ item.timestamp|timesince }} назад</p>
-                </div>
-                
-              </div>
-              <div class="repost-title-genre">
-                <div class="repost-item-title">
-                  <p class="item-title">{{item.song.title}}</p>
-                </div>
-                <div class="repost-item-genre">
-                  <div class="genre-container">
-                    <a href="" class="genre-box">
-                      <span># {{item.song.genre}}</span>
-                    </a>
-                    
-                  </div>
-                </div>
-              </div>
-
-              <div class="waveform" data-src="{{ item.song.audio_file.url }}" id="waveform-{{ forloop.counter0 }}"></div>
-
-            </div>
-            {% else %}
-              <div class='song-wrapper'> 
-                <div class='song-card'>
+              {% else %}
+                <img src="{% static 'images/placeholder.png' %}" alt="Обложка" class="song-cover">
+              {% endif %}
+              <button class="play-btn"
+                data-id="{{ item.id }}" 
+                data-src="{{ item.audio_file.url }}" 
+                data-title="{{ item.title }}" 
+                data-artist="{{ item.artist }}"
                 {% if item.album.cover %}
-                  <a href="/music/{{ item.slug }}/" onclick="loadPage(event, '/music/{{ item.slug }}/')">
-                      <img src="{{ item.album.cover.url   }}" alt="Обложка" class='song-cover'>
-                  </a>
+                    data-cover="{{ item.album.cover.url }}"
                 {% else %}
-                <img src="{% static 'images/placeholder.png' %}" alt="Обложка" class='song-cover'>
+                    data-cover="{% static 'images/placeholder.png' %}"
                 {% endif %}
-
-                <button class="play-btn"
-                  data-id="{{ item.id }}" 
-                  data-src="{{ item.audio_file.url }}" 
-                  data-title="{{ item.title }}" 
-                  data-artist="{{ item.artist }}"
-                  {% if item.album.cover %}
-                      data-cover="{{ item.album.cover.url }}"
-                  {% else %}
-                      data-cover="{% static 'images/placeholder.png' %}"
-                  {% endif %}
-                  >▶</button>
-                <button class="like-btn" data-id="{{ item.id }}">
-                <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                  <path d="M7.978 5c.653-1.334 1.644-2 2.972-2 1.992 0 3.405 1.657 2.971 4-.289 1.561-2.27 3.895-5.943 7C4.19 10.895 2.21 8.561 2.035 7c-.26-2.343.947-4 2.972-4 1.35 0 2.34.666 2.971 2z" fill="currentColor"></path>
-                </svg>
-                </button>
-                </div>
-              </div>
-            
-            <div class="repost-line">
-              <div class="repost-top">
-                <div class="repost-info">
-                  <a href="/user/{{ item.uploaded_by.username }}/" onclick="loadPage(event, '/user/{{ item.uploaded_by.username }}/')">
-                    {{ item.song.uploaded_by }}
-                  </a>
-                  <a href="/user/{{ profile.user.username }}/" onclick="loadPage(event, '/user/{{ profile.user.username }}/')">
-                    {{ profile.user.username }}
-                  </a>
-                </div>
-
-                <div class="repost-timestamp">
-                  <p>{{ item.uploaded_at|timesince }} назад</p>
-                </div>
-                
-              </div>
-              <div class="repost-title-genre">
-                <div class="repost-item-title">
-                  <p class="item-title">{{item.title}}</p>
-                </div>
-                <div class="repost-item-genre">
-                  <div class="genre-container">
-                    <a href="" class="genre-box">
-                      <span># {{item.genre}}</span>
-                    </a>
-                    
-                  </div>
-                </div>
-              </div>
-
-            <div class="waveform" data-src="{{ item.audio_file.url }}" id="waveform-{{ forloop.counter0 }}"></div>
+                >▶</button>
             </div>
-            {% endif %}
+            <div class="liked-song-details">
+              <p class="song-title">{{ song.title }}</p>
+              <p class="song-artist">{{ song.artist }}</p>
+              <p class="song-genre">#{{ song.genre }}</p>
+            </div>
           </div>
         {% endfor %}
-      </div>
+    </div>
   </div>
 </div>
-
 
 
 
@@ -254,39 +335,9 @@
 </div>
 
 
-
-{% comment %} <script src="{% static "js/music/profile.js" %}"></script> {% endcomment %}
- <link rel="stylesheet" href="{% static 'styles/liked.css' %}">
+<link rel="stylesheet" href="{% static 'styles/liked.css' %}">
 <link rel="stylesheet" href="{% static "styles/profile.css" %}">
-
-
-
-<script>
-{% comment %} window.wavesurfers = {};
-
-document.addEventListener("DOMContentLoaded", () => {
-  const waveformElements = document.querySelectorAll(".waveform");
-
-  waveformElements.forEach((el, i) => {
-    const audioUrl = el.dataset.src;
-    const wavesurfer = WaveSurfer.create({
-      container: el,
-      waveColor: '#aaa',
-      progressColor: '#ff5500',
-      height: 60,
-      responsive: true,
-      barWidth: 2,
-    });
-
-    wavesurfer.load(audioUrl);
-    console.log(audioUrl)
-
-    // Сохраняем экземпляр под ключом URL или индексом
-    window.wavesurfers[audioUrl] = wavesurfer;
-
-  });
-});  {% endcomment %}
-</script>
+<script src="{% static "js/music/profile.js" %}"></script>
 
 <script>
 function getCookie(name) {
@@ -295,12 +346,10 @@ function getCookie(name) {
 }
 
 document.addEventListener('click', function (e) {
-  // открыть Spotlight-модалку
   if (e.target.matches('#openSpotlightModal')) {
     document.getElementById('spotlightModal')?.classList.remove('hidden');
   }
 
-  // закрыть Spotlight-модалку (по кнопке или вложенному svg)
   if (e.target.matches('#closeSpotlightModal') || e.target.closest('#closeSpotlightModal')) {
     document.getElementById('spotlightModal')?.classList.add('hidden');
   }

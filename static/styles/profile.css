@@ -267,7 +267,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width: 500px;
+  width: 650px;
 }
 
 .repost-info {
@@ -327,3 +327,186 @@
   overflow: hidden;
   margin-left: auto;
 } */
+.song-card-spotlight {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  background-color: #f2f2f2;
+  margin-bottom: 5px;
+
+}
+
+.song-cover {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.song-wrapper-spotlight {
+    width: 200px;
+    height: 200px;
+}
+
+.spotlight-row {
+  display: flex;
+  gap: 40px; /* расстояние между карточками и лайками */
+  align-items: flex-start;
+}
+
+.liked-section {
+  width: 280px;
+  color: white;
+  border-radius: 12px;
+  padding: 20px;
+  margin-top: 0px;
+}
+
+.liked-title {
+  font-size: 12px;
+  font-weight: bold;
+  margin-top: 0px;
+}
+
+.liked-song-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.liked-song-cover img {
+  width: 48px;
+  height: 48px;
+}
+
+.liked-song-details {
+  display: flex;
+  flex-direction: column;
+}
+
+.song-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: white;
+  margin: 0;
+}
+
+.song-artist {
+  font-size: 14px;
+  color: #aaa;
+  margin: 2px 0 0;
+}
+
+.song-genre {
+  font-size: 12px;
+  color: #666;
+  margin: 2px 0 0;
+}
+
+.liked-song-info {
+  display: flex;
+  gap: 5px;
+  margin-bottom: 25px;
+}
+
+.profile-main-content {
+  display: flex;
+  gap: 40px;
+  align-items: flex-start;
+}
+
+.left-column {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.right-column {
+  display: flex;
+  flex-direction: column;
+}
+
+.follow-section {
+  /* width: 280px; */
+  color: white;
+  border-radius: 12px;
+  padding: 20px;
+
+}
+
+.follow-button {
+  background-color: #ffffff;
+  color: #000000;
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
+  padding: 0.6rem 1rem;
+  font-weight: 700;
+  font-size: 13.3px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 32px;
+}
+
+.followed-button {
+  background-color: #303030;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
+  padding: 0.6rem 1rem;
+  font-weight: 700;
+  font-size: 13.3px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+    height: 32px;
+}
+
+.share-button {
+  background-color: #303030;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
+  padding: 0.6rem 1rem;
+  font-weight: 700;
+  font-size: 13.3px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 32px;
+}
+
+.follow-header {
+  display: flex;
+  gap: 15px;
+}
+
+.follow-main {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); 
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.follow-types, .follow-values {
+  display: contents; 
+}
+
+.follow-types p,
+.follow-values span {
+  margin: 0;
+  font-weight: bold;
+}
+
+.follow-types p {
+  font-size: 16px;
+  font-weight: 700;
+}

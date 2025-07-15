@@ -7,15 +7,15 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
-<body class="{% if page_class %}{{ page_class }}{% endif %}">
-    <div class='parent {{ page_class }}'>
+<body data-barba="wrapper" data-page-class="{{ page_class }}" class="{% if page_class %}{{ page_class }}{% endif %}">
+    <div class="parent {% if page_class %}{{ page_class }}{% endif %}">
         <div class="div1">
             <div class="header-links">
-                <a href="/music/" onclick="loadPage(event, '/music/')"><img src="{% static 'images/logo.png' %}" alt="" class="logo"></a>
-                <a href="/music/" onclick="loadPage(event, '/music/')">Home</a>
+                <a href="/music/"><img src="{% static 'images/logo.png' %}" alt="" class="logo"></a>
+                <a href="/music/">Home</a>
                 <a href="">Feed</a>
-                <a href="/music/upload/" onclick="loadPage(event, '/music/upload/')">Upload</a>
-                <a href="/music/liked/" onclick="loadPage(event, '/music/liked/')">Liked</a>
+                <a href="/music/upload/">Upload</a>
+                <a href="/music/liked/">Liked</a>
                 <a href="/user/{{ user.username }}/" onclick="loadPage(event, '/user/{{ user.username }}/')">Profile</a>
                 {% if user.is_authenticated %}
                     <form method="POST" action="{% url 'logout' %}">
@@ -23,17 +23,20 @@
                         <button class="logout-button" type="submit">Logout</button>
                     </form>
                 {% else %}
-                    <a href="/user/login/" onclick="loadPage(event, '/user/login/')">Login</a>
+                    <a href="/user/login/">Login</a>
                 {% endif %}
                 <button id="theme-toggle" aria-label="Переключить тему" style="background:none;border:none;font-size:1.2rem;cursor:pointer"> 🌓</button>
             </div>
         </div> 
 
         <div class="div2">
+        <div data-barba="container" data-barba-namespace="profile" data-page-class="{{ page_class }}">
             <main id="main-content">
-                {% block content %}{% endblock %}
+            {% block content %}{% endblock %}
             </main>
         </div>
+        </div>
+
 
         <footer>
             <div id="audio-player">
@@ -143,26 +146,16 @@
             </div>
         </div>
     </div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/color-thief/2.3.2/color-thief.umd.js"></script>
-    <script src="https://unpkg.com/@barba/core"></script>
-    <script src="https://unpkg.com/wavesurfer.js"></script> 
-    <script src="{% static "js/music/soundcloud-waveform.js" %}"></script>
-    <script src="{% static "js/music/upload.js" %}"></script>
-    <script src="{% static "js/music/song_detail.js"%}"></script>
-    <script src="{% static 'js/music/player.js' %}"></script>
-    <script>
-        const toggle = document.getElementById('theme-toggle');
-        const root = document.documentElement;
 
-        // При загрузке ставим сохранённую тему
-        const saved = localStorage.getItem('theme');
-        if (saved) root.setAttribute('data-theme', saved);
 
-        toggle.addEventListener('click', () => {
-            const current = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-            root.setAttribute('data-theme', current);
-            localStorage.setItem('theme', current);
-        });
-    </script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/color-thief/2.3.2/color-thief.umd.js"></script>
+  <script src="https://unpkg.com/@barba/core"></script>
+  <script src="https://unpkg.com/wavesurfer.js"></script> 
+  <script src="{% static "js/music/soundcloud-waveform.js" %}"></script>
+  <script src="{% static "js/music/upload.js" %}"></script>
+  <script src="{% static "js/music/song_detail.js"%}"></script>
+  <script src="{% static 'js/music/player.js' %}"></script>
+
 </body>
 </html>
