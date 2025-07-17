@@ -13,6 +13,7 @@ urlpatterns = [
     path('logout/', LogoutView.as_view(), name='logout'),
     path('profile/update-banner/', views.update_banner, name='update_banner'),
     path('profile/update-avatar/', views.update_avatar, name='update_avatar'),
+    path('feed/', views.feed_activity , name="feed"),
     path('<str:username>/', UserProfileView.as_view(), name='profile'),
     path('follow', toggle_follow, name="toggle_follow"),
 ]

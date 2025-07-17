@@ -49,7 +49,9 @@
     <div class="spotlight-section">
         <div class="spotlight-header">
             <p class="spotlight-text">Spotlight</p>
-            <button id="openSpotlightModal">Edit Spotlight</button>
+            {% if profile.user.id == request.user.id %}
+              <button id="openSpotlightModal">Edit Spotlight</button> 
+            {% endif %}
         </div>
         <div class='spotlight-row'>
           <div class='song-container'>

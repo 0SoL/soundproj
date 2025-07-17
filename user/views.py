@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.views import LoginView, LogoutView
-from django.views.generic import CreateView
+from django.views.generic import CreateView, ListView
 from .forms import RegisterForm
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -36,7 +36,6 @@ class UserProfileView(TemplateView):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-
         username = self.kwargs['username']
         user = get_object_or_404(User, username=username)
         profile = get_object_or_404(Profile, user=user)
@@ -59,10 +58,9 @@ class UserProfileView(TemplateView):
             reverse=True
         )
         print(user.liked_songs.all(), 'zalupa')
+        context['recent_activity'] = recent
+        context['liked_songs'] = user.liked_songs.all()
         
-        if user == self.request.user:
-            context['liked_songs'] = user.liked_songs.all()
-            context['recent_activity'] = recent
         return context
 
 
@@ -108,3 +106,14 @@ def toggle_follow(request):
         following = True
 
     return JsonResponse({"following": following})
+
+
+@login_required
+def feed_activity(request):
+    followed_users = list(request.user.profile.following.all()) + [request.user]
+    uploads = Song.objects.filter(uploaded_by__in=followed_users)
+    reposts = Repost.objects.filter(user__in=followed_users)
+    print(followed_users)
+    print(uploads)
+    return render(request, 'user/feed_activity.html', {'followers': followed_users, 'page_class': 'no-div3', 'uploads' : uploads, 'reposts' : reposts})
+    

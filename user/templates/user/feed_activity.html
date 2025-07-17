@@ -1,0 +1,144 @@
+
+{% extends "base.html" %}
+{% load static %}
+{% block content %} 
+<div class="feed-main-content">
+    <div class="left-section">
+        <div class="latest-post-section">
+            <p class="latest-post-header">Hear the latest posts from the people you’re following:</p>
+        </div>
+        <div class="latest-repost">
+            {% for repost in reposts %}
+                <div class="latest-repost-header">
+                    {% if repost.user.profile.avatar %}
+                        <img src="{{ repost.user.profile.avatar.url }}" alt="Аватар" class="profile-avatar">
+                    {% else %}
+                        <img src="{% static "images/avatar_placeholder.png" %}" alt="Аватар по умолчанию" class="profile-avatar">
+                    {% endif %}
+
+                    <p><a class="repost-user-username" href="">{{repost.user.profile.display_name}}</a></p>
+                    <svg viewBox="0 0 16 16" height="16px" width="16px" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M7.08034 5.71966L4.05001 2.68933L1.01968 5.71966L2.08034 6.78032L3.30002 5.56065V9.75C3.30002 11.2688 4.53124 12.5 6.05002 12.5H8.05002V11H6.05002C5.35966 11 4.80002 10.4404 4.80002 9.75V5.56066L6.01968 6.78032L7.08034 5.71966Z" fill="currentColor"></path><path d="M11.95 13.3107L8.91969 10.2803L9.98035 9.21968L11.2 10.4393L11.2 5.75C11.2 5.05964 10.6404 4.5 9.95001 4.5L7.95001 4.5L7.95001 3L9.95001 3C11.4688 3 12.7 4.23122 12.7 5.75L12.7 10.4394L13.9197 9.21968L14.9803 10.2803L11.95 13.3107Z" fill="currentColor"></path></svg>
+                    <p>reposted a track {{ repost.timestamp|timesince }} назад</p>
+                </div>
+                <div class="latest-repost-main">
+                    <div class="song-body">
+                        <div class="song-artwork">
+                            <div class='song-wrapper'> 
+                                <div class='song-card'>
+                                    {% if repost.song.album.cover %}
+                                    <a href="/music/{{ repost.song.slug }}/">
+                                        <img src="{{ repost.song.album.cover.url  }}" alt="Обложка" class='song-cover'>
+                                    </a>
+                                    {% else %}
+                                    <img src="{% static 'images/placeholder.png' %}" alt="Обложка" class='song-cover'>
+                                    {% endif %}
+
+                                    <button class="play-btn"
+                                    data-id="{{ repost.song.id }}" 
+                                    data-src="{{ repost.song.audio_file.url }}" 
+                                    data-title="{{ repost.song.title }}" 
+                                    data-artist="{{ repost.song.artist }}"
+                                    {% if repost.song.album.cover %}
+                                        data-cover="{{ repost.song.album.cover.url }}"
+                                    {% else %}
+                                        data-cover="{% static 'images/placeholder.png' %}"
+                                    {% endif %}
+                                    >▶</button>
+                                    <button class="like-btn" data-id="{{ repost.song.id }}">
+                                    <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                        <path d="M7.978 5c.653-1.334 1.644-2 2.972-2 1.992 0 3.405 1.657 2.971 4-.289 1.561-2.27 3.895-5.943 7C4.19 10.895 2.21 8.561 2.035 7c-.26-2.343.947-4 2.972-4 1.35 0 2.34.666 2.971 2z" fill="currentColor"></path>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="song-info">
+                            <div class="song-info-header">
+                                <div class="song-main-info">
+                                    <p class="repost-song-uploaded_by">{{repost.song.uploaded_by}}</p>
+                                    <p class="repost-song">{{repost.song}}</p>
+                                </div>
+                                <div class="song-genre">
+                                    <a href="" class="genre-box">
+                                        <span># {{repost.song.genre}}</span>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="waveform" data-src="{{ repost.song.audio_file.url }}" id="waveform-{{ forloop.counter0 }}"></div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        <div class="latest-repost">
+            {% for upload in uploads %}
+                <div class="latest-repost-header">
+                    {% if upload.uploaded_by.profile.avatar %}
+                        <img src="{{ upload.uploaded_by.profile.avatar.url }}" alt="Аватар" class="profile-avatar">
+                    {% else %}
+                        <img src="{% static "images/avatar_placeholder.png" %}" alt="Аватар по умолчанию" class="profile-avatar">
+                    {% endif %}
+                    <p><a class="repost-user-username" href="">{{ upload.uploaded_by.profile.display_name}}</a></p>
+                    <svg viewBox="0 0 16 16" height="16px" width="16px" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M7.08034 5.71966L4.05001 2.68933L1.01968 5.71966L2.08034 6.78032L3.30002 5.56065V9.75C3.30002 11.2688 4.53124 12.5 6.05002 12.5H8.05002V11H6.05002C5.35966 11 4.80002 10.4404 4.80002 9.75V5.56066L6.01968 6.78032L7.08034 5.71966Z" fill="currentColor"></path><path d="M11.95 13.3107L8.91969 10.2803L9.98035 9.21968L11.2 10.4393L11.2 5.75C11.2 5.05964 10.6404 4.5 9.95001 4.5L7.95001 4.5L7.95001 3L9.95001 3C11.4688 3 12.7 4.23122 12.7 5.75L12.7 10.4394L13.9197 9.21968L14.9803 10.2803L11.95 13.3107Z" fill="currentColor"></path></svg>
+                    <p>reposted a track {{ upload.timestamp|timesince }} назад</p>
+                </div>
+                <div class="latest-repost-main">
+                    <div class="song-body">
+                        <div class="song-artwork">
+                            <div class='song-wrapper'> 
+                                <div class='song-card'>
+                                    {% if upload.album.cover %}
+                                    <a href="/music/{{ upload.slug }}/">
+                                        <img src="{{ upload.album.cover.url  }}" alt="Обложка" class='song-cover'>
+                                    </a>
+                                    {% else %}
+                                    <img src="{% static 'images/placeholder.png' %}" alt="Обложка" class='song-cover'>
+                                    {% endif %}
+
+                                    <button class="play-btn"
+                                    data-id="{{ upload.id }}" 
+                                    data-src="{{ upload.audio_file.url }}" 
+                                    data-title="{{ upload.title }}" 
+                                    data-artist="{{ upload.artist }}"
+                                    {% if upload.album.cover %}
+                                        data-cover="{{ upload.album.cover.url }}"
+                                    {% else %}
+                                        data-cover="{% static 'images/placeholder.png' %}"
+                                    {% endif %}
+                                    >▶</button>
+                                    <button class="like-btn" data-id="{{ upload.song.id }}">
+                                    <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                        <path d="M7.978 5c.653-1.334 1.644-2 2.972-2 1.992 0 3.405 1.657 2.971 4-.289 1.561-2.27 3.895-5.943 7C4.19 10.895 2.21 8.561 2.035 7c-.26-2.343.947-4 2.972-4 1.35 0 2.34.666 2.971 2z" fill="currentColor"></path>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="song-info">
+                            <div class="song-info-header">
+                                <div class="song-main-info">
+                                    <p class="repost-song-uploaded_by">{{upload.uploaded_by}}</p>
+                                    <p class="repost-song">{{upload}}</p>
+                                </div>
+                                <div class="song-genre">
+                                    <a href="" class="genre-box">
+                                        <span># {{upload.genre}}</span>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="waveform" data-src="{{ upload.audio_file.url }}" id="waveform-{{ forloop.counter0 }}"></div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+
+
+
+
+<link rel="stylesheet" href="{% static "styles/feed_activity.css" %}">
+{% endblock content %}

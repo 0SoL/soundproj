@@ -70,7 +70,6 @@ def toggle_like(request):
 @login_required
 def liked_songs(request):
     songs = request.user.liked_songs.all()
-    print(songs)
     return render(request, 'music/liked.html', {'songs': songs, 'page_class': 'no-div3'})
 
 

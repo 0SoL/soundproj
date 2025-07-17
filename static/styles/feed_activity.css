@@ -1,0 +1,136 @@
+.feed-main-content {
+    padding-bottom: 100px;
+}
+
+.latest-repost-header {
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+.latest-post-header {
+    font-size: 22px;
+    color: white;
+    font-weight: 700;
+}
+
+.latest-repost-main {
+    margin-bottom: 30px;
+}
+
+.repost-user-username {
+    text-decoration: none;
+    color: white;
+}
+
+.profile-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    margin-right: 15px;
+}
+
+.latest-repost-header p {
+    font-size: 14px;
+}
+
+.latest-repost-header svg {
+    margin-left: 0px;
+}
+
+.song-wrapper {
+    width: 160px;
+    height: 160px;
+}
+
+.song-card {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    background-color: #f2f2f2;
+}
+
+.song-cover {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.play-btn {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -60%);
+    background: rgba(0,0,0,0.7);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    font-size: 18px;
+    cursor: pointer;
+    z-index: 2;
+}
+
+.song-body {
+    display: flex;
+    gap: 10px;
+}
+
+.song-info {
+    display: flex;
+    flex-direction: column;
+    width: 600px;
+}
+
+.song-info p {
+    margin: 0;
+}
+
+.repost-song {
+    margin: 2px 0 0 0;
+  font-weight: 500;
+  font-size: 14px;
+  color: white;
+}
+
+.repost-song-uploaded_by {
+    color: #999999;
+    font-size: 13px;
+}
+
+a {
+    text-decoration: none;
+}
+
+.genre-box {
+    background: #303030;
+    padding: 2px 8px; /* top | right | bottom | left */
+    border-radius: 100px;
+    color: #fff;
+    height: 24px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.genre-box span{
+    color: white;
+    font-weight: 100;
+}
+
+.song-info-header {
+    display: flex;
+  justify-content: space-between; /* это расталкивает .repost-info и .repost-timestamp */
+  align-items: center;
+      margin-bottom: 30px;
+}
+
+.left-section {
+}
