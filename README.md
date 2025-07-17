@@ -9,3 +9,8 @@ Tech stack used:
 •	Frontend: Vanilla JavaScript, HTML, CSS
 
 This project helped me dive deeper into media handling, dynamic UX, and user interaction — while also being a fun playground to experiment with UI and features.
+
+## 📺 Preview
+
+![SoundClone Preview](./project_gif.gif)
+![SoundClone Preview](./project_gif2.gif)
